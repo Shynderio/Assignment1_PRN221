@@ -1,0 +1,34 @@
+﻿<Window x:Class="Estore.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Estore"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Add Buttons for CRUD Operations -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
+            <Button Content="Add Product" Click="AddProductButton_Click"/>
+            <Button Content="Update Product" Click="UpdateProductButton_Click"/>
+            <Button Content="Delete Product" Click="DeleteProductButton_Click"/>
+        </StackPanel>
+
+        <!-- Products ListView -->
+        <ListView x:Name="products" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding ProductId}" Header="Product ID" />
+                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProductName}" Header="Product Name" />
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding CategoryId}" Header="Category ID" />
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding UnitPrice}" Header="Unit Price" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>
