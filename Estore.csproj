@@ -29,4 +29,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Admin\" />
+    <Folder Include="Views\Staff\" />
+  </ItemGroup>
+
 </Project>
