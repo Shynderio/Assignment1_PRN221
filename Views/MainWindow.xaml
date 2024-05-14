@@ -12,23 +12,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Add Buttons for CRUD Operations -->
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
-            <Button Content="Add Product" Click="AddProductButton_Click"/>
-            <Button Content="Update Product" Click="UpdateProductButton_Click"/>
-            <Button Content="Delete Product" Click="DeleteProductButton_Click"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Height="30" VerticalAlignment="Top">
+            <Button Content="Admin" Click="NavigateToAdminView" Margin="5"/>
+            <Button Content="Staff" Click="NavigateToStaffView" Margin="5"/>
         </StackPanel>
 
-        <!-- Products ListView -->
-        <ListView x:Name="products" Grid.Row="1">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding ProductId}" Header="Product ID" />
-                    <GridViewColumn Width="150" DisplayMemberBinding="{Binding ProductName}" Header="Product Name" />
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding CategoryId}" Header="Category ID" />
-                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding UnitPrice}" Header="Unit Price" />
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ContentControl x:Name="ContentArea" Grid.Row="1"/>
     </Grid>
 </Window>

@@ -10,12 +10,30 @@
     <Compile Update="Views\Admin\AdminView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Admin\OrderListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\ProductsManageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\StaffsManageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Staff\StaffView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\Admin\AdminView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\OrderListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\ProductsManageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\StaffsManageView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
