@@ -7,7 +7,7 @@ namespace Estore.Repositories
         Task<IEnumerable<Category>> GetCategories();
         Task<IEnumerable<Product>> GetProducts(string keyword, IEnumerable<int> categoryIds);
         Task<Product> GetProductByID(int productId);
-        Task<IEnumerable<Product>> InsertProduct(Product product);
+        Task<Product> InsertProduct(Product product);
         Task<IEnumerable<Product>> DeleteProduct(int productId);
         Task<Product> UpdateProduct(Product product);
     }
