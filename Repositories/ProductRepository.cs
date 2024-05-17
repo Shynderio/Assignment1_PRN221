@@ -100,6 +100,9 @@ namespace Estore.Repositories
                 var product = await _storeContext.Products.FirstOrDefaultAsync(o => o.ProductId == productId);
                 if (product == null)
                     throw new Exception($"Product with id {productId} does not exist");
+                var isInOrder = await _storeContext.OrderDetails.AnyAsync(o => o.ProductId == productId);
+                if (isInOrder)
+                    throw new Exception($"Product with id [{productId}] already had order(s) so that it cannot be deleted");
                 _storeContext.Products.Remove(product);
                 await _storeContext.SaveChangesAsync();
                 return await GetProducts(string.Empty, new List<int>());
