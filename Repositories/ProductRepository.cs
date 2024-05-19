@@ -24,20 +24,25 @@ namespace Estore.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetProducts(string keyword, IEnumerable<int> categoryIds)
+        public async Task<IEnumerable<Product>> GetProducts(string keyword, List<int> categoryIds)
         {
             try
             {
+                MessageBox.Show("Into GetProducts");
                 var products = await _storeContext.Products.ToArrayAsync();
-                if (!string.IsNullOrEmpty(keyword))
+                if (products != null && products.Any())
                 {
-                    products = products.Where(o => o.ProductName.Contains(keyword)).ToArray();
+                    if (!string.IsNullOrEmpty(keyword))
+                    {
+                        products = products.Where(o => o.ProductName.Contains(keyword)).ToArray();
+                    }
+                    if (categoryIds != null && categoryIds.Any())
+                    {
+                        products = products.Where(o => categoryIds.Contains(o.CategoryId)).ToArray();
+                    }
+                    return products.OrderBy(o => o.ProductName);
                 }
-                if (categoryIds != null && categoryIds.Any())
-                {
-                    products = products.Where(o => categoryIds.Contains(o.CategoryId)).ToArray();
-                }
-                return products;
+                return Enumerable.Empty<Product>();
             }
             catch (Exception e)
             {
