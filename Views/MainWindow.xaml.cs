@@ -38,7 +38,7 @@ namespace Estore
 
         private void NavigateToStaffView(object sender, RoutedEventArgs e)
         {
-            var staffView = new StaffView();
+            var staffView = new StaffView(_productRepository, _orderRepository);
             staffView.Show();
             Close();
         }

@@ -16,12 +16,5 @@ namespace Estore.Models
 
         public virtual Staff Staff { get; set; } = null!;
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public decimal TotalPrice
-        {
-            get
-            {
-                return OrderDetails.Sum(od => od.Quantity * od.UnitPrice);
-            }
-        }
     }
 }

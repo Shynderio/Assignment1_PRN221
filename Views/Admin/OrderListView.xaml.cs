@@ -6,27 +6,26 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using static Estore.Repositories.OrderRepository;
 
 namespace Estore.Views.Admin
 {
     public partial class OrderListView : Page, INotifyPropertyChanged
     {
-        private const int ItemsPerPage = 10;
+        private const int ItemsPerPage = 8;
         private int _currentPage = 1;
         private readonly IOrderRepository _orderRepository;
-        private List<Order> _allOrders;
-        private List<Order> _pagedOrders;
-        private List<Order> _filteredOrders;
+        private List<OrderDto> _allOrders;
+        private List<OrderDto> _pagedOrders;
+        private List<OrderDto> _filteredOrders;
         private string _searchTerm;
-
+        private bool _isStaff;
         public OrderListView(IOrderRepository orderRepository)
         {
             InitializeComponent();
             DataContext = this;
-
             _orderRepository = orderRepository;
-
-
+            _isStaff = false;
             InitializeOrdersAsync();
         }
 
@@ -51,16 +50,20 @@ namespace Estore.Views.Admin
             }
         }
 
+        public bool IsStaff
+        {
+            get => _isStaff;
+            set
+            {
+                _isStaff = value;
+                OnPropertyChanged(nameof(IsStaff));
+            }
+        }
+
         private void UpdatePagedView()
         {
             _pagedOrders = _filteredOrders.Skip((CurrentPage - 1) * ItemsPerPage).Take(ItemsPerPage).ToList();
-            dataGrid.ItemsSource = _pagedOrders.Select(o => new
-            {
-                o.OrderId,
-                o.OrderDate,
-                StaffName = o.Staff.Name,
-                o.TotalPrice
-            });
+            dataGrid.ItemsSource = _pagedOrders;
         }
 
         private void PreviousButton_Click(object sender, RoutedEventArgs e)
@@ -87,6 +90,9 @@ namespace Estore.Views.Admin
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+
+
+
         private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string searchText = SearchTextBox.Text.Trim();
@@ -108,7 +114,7 @@ namespace Estore.Views.Admin
                 }
                 else
                 {
-                    _filteredOrders = _allOrders.Where(o => o.Staff.Name.ToLower().Contains(searchText.ToLower())).ToList();
+                    _filteredOrders = _allOrders.Where(o => o.StaffName.ToLower().Contains(searchText.ToLower())).ToList();
                 }
             }
 

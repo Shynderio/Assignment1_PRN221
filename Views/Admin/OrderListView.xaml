@@ -1,50 +1,103 @@
 ﻿<Page x:Class="Estore.Views.Admin.OrderListView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Estore.Views.Admin"
+      
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OrderListView">
-
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <BooleanToVisibilityConverter x:Key="IsStaff"/>
+    </Page.Resources>
     <Grid Background="WhiteSmoke">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
+
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Button Width="150"  HorizontalAlignment="Left" Content="Back to home page" Background="WhiteSmoke" BorderThickness="0" Margin="5" Grid.Column="0" Grid.Row="0"></Button>
-            <Label HorizontalAlignment="Left" Content="Orders" Background="WhiteSmoke" Grid.Column="0" Grid.Row="1" FontSize="20" FontWeight="Bold" Margin="30,0,0,0" ></Label>
-            <TextBox HorizontalAlignment="Left" x:Name="SearchTextBox" Width="314" Grid.Column="0" Grid.Row="2" Margin="30,8,0,0" TextChanged="SearchTextBox_TextChanged"/>
 
+        <TextBlock Text="Orders" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 20 0 0"
+                   HorizontalAlignment="Left" Foreground="Black"/>
+        <Button Style="{StaticResource addButton}" Visibility="{Binding IsStaff, Converter={StaticResource IsStaff}}">
+            <StackPanel Orientation="Horizontal">
+                <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                <TextBlock Text="Add New Order"/>
+            </StackPanel>
+        </Button>
+        <Separator Height="1" Grid.Row="3" Background="White" Margin="0 -1 0 10"/>
 
-        </Grid>
-        <Grid Grid.Row="1">
-            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" Margin="30,30,30,0" >
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="80" Header="Order ID" Binding="{Binding OrderId}" />
-                    <DataGridTextColumn Width="120" Header="Order Date" Binding="{Binding OrderDate}" />
-                    <DataGridTextColumn Width="250" Header="Staff Name" Binding="{Binding StaffName}" />
-                    <DataGridTextColumn Width="120" Header="Total Price" Binding="{Binding TotalPrice, StringFormat=C}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-        <!-- Paging Controls -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
-            <Button Content="Previous" Click="PreviousButton_Click" Margin="5"/>
-            <TextBlock Text="{Binding CurrentPage}" VerticalAlignment="Center" Margin="5"/>
-            <Button Content="Next" Click="NextButton_Click" Margin="5"/>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 10 0 0 ">
+            <Button Content="" Style="{StaticResource tabButton}"/>
         </StackPanel>
+
+        <TextBlock Text="Orders List" Grid.Row="4" FontSize="18" FontWeight="SemiBold"
+                 Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Text="Filter by" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
+                 Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+
+        <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
+            <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                       Panel.ZIndex="1" Text="Staff name or Order Id..."
+                       Visibility="{Binding ElementName=SearchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+            <TextBox x:Name="SearchTextBox" Style="{StaticResource textboxSearch}" TextChanged="SearchTextBox_TextChanged"/>
+            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
+                       Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>
+        </Grid>
+        <DataGrid Style="{DynamicResource DataGridStyle1}" 
+                  CellStyle="{DynamicResource DataGridCellStyle1}" 
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
+                  RowStyle="{DynamicResource DataGridRowStyle1}" 
+                  Grid.Row="5" x:Name="dataGrid">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding OrderId}"/>
+
+                <DataGridTextColumn Header="Start Date" IsReadOnly="True" Width="*" Binding="{Binding OrderDate, StringFormat='dd/MM/yyyy'}"/>
+                <DataGridTextColumn Header="End Date" IsReadOnly="True" Width="*" Binding="{Binding EndDate, StringFormat='dd/MM/yyyy'}"/>
+                <DataGridTextColumn Header="Staff Name" IsReadOnly="True" Width="*" Binding="{Binding StaffName}"/>
+                <DataGridTextColumn Header="Total Price" IsReadOnly="True" Width="*" Binding="{Binding TotalPrice, StringFormat=C}"/>
+                <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource gridViewButton}" Visibility="{Binding Path = DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}">
+                                    <Icon:PackIconMaterial Kind="Pencil" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                                <Button Style="{StaticResource gridViewButton}">
+                                    <Icon:PackIconMaterial Kind="EyeOutline" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                                <Button Style="{StaticResource gridDeleteButton}" Visibility="{Binding Path = DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}">
+                                    <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border Grid.Row="6" HorizontalAlignment="Right" BorderBrush="Gray" BorderThickness="1"
+                CornerRadius="5" Padding="5" Background="White" Margin="0 10 10 10">
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource pagingButton}" Click="PreviousButton_Click">
+                    <Icon:PackIconMaterial Kind="ChevronLeft" Style="{StaticResource pagingButtonIcon}"/>
+                </Button>
+                <Rectangle Width="1" Fill="LightGray" Margin="3 7"/>
+                <Rectangle Width="1" Fill="LightGray" Margin="3 7"/>
+                <Button Style="{StaticResource pagingButton}"  Click="NextButton_Click">
+                    <Icon:PackIconMaterial Kind="ChevronRight" Style="{StaticResource pagingButtonIcon}"/>
+                </Button>
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>
