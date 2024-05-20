@@ -27,6 +27,8 @@ namespace Estore
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddSingleton<StaffsManageView>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddSingleton<MainWindow>();
 
         }
 

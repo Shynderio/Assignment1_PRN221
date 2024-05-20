@@ -2,11 +2,95 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Estore.Views.Staff"
         mc:Ignorable="d"
-        Title="StaffView" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="StaffView" Height="720" Width="1080" WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" Background="Transparent" WindowStyle="None">
+    
+    <Border Background="WhiteSmoke" CornerRadius="30" MouseDown="Border_MouseDown" >
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Margin="25 35 0 42" Style="{StaticResource closeButton}" Visibility="Hidden">
+                    <Icon:PackIconMaterial Kind="Menu" Width="15" Height="15"/>
+                </Button>
+                <Border Grid.Row="1" Background="White" CornerRadius="0 50 0 30">
+                    <DockPanel>
+                        <Border Width="100" Height="100" Padding="5" Background="CadetBlue" CornerRadius="100"
+                    DockPanel.Dock="Top" HorizontalAlignment="Left" Margin="25 -30 0 0">
+                            <!--<Ellipse>
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource=""/>
+                    </Ellipse.Fill>    
+                </Ellipse>-->
+                        </Border>
+                        <Separator Margin="30" DockPanel.Dock="Top" Height="0.8" Background="Red">
+                            <Separator.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black"/>
+                                    <GradientStop Color="White" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Separator.BorderBrush>
+                        </Separator>
+                        <StackPanel DockPanel.Dock="Top">
+                            <!-- Button to Manage Products -->
+                            <Button Click="NavigateToProducts" Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Package" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Products"></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="NavigateToStaffs" Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Staffs"></TextBlock>
+                                </StackPanel>
+                            </Button>
+                            <Button Click="NavigateToOrders" Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Clipboard" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Orders"></TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <!-- Button to Manage Staff -->
+                            <!--<Button Content="Manage Staff" Click="NavigateToStaffs" Width="200" Height="40" FontSize="18" Margin="0 10"/>-->
+
+                            <!-- Button to View Orders -->
+                            <!--<Button Content="View Orders" Click="NavigateToOrders" Width="200" Height="40" FontSize="18" Margin="0 10"/>-->
+
+                        </StackPanel>
+                        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
+                            <StackPanel Orientation="Horizontal">
+                                <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
+                                <TextBlock Text="Log out"></TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </DockPanel>
+
+                </Border>
+
+            </Grid>
+            <Grid Grid.Column="1" Margin="30 20 20 20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Style="{StaticResource closeButton}" Margin="0,0,20,5" HorizontalAlignment="Right" Click="CloseButton_Click">
+                    <Icon:PackIconMaterial Kind="Close"/>
+                </Button>
+                <Frame x:Name="ContentFrame" Grid.Row="1" NavigationUIVisibility="Hidden" />
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

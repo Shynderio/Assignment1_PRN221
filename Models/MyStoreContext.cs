@@ -30,7 +30,8 @@ namespace Estore.Models
                 var conf = new ConfigurationBuilder()
                     .AddJsonFile("appsettings.json")
                     .Build();
-                optionsBuilder.UseSqlServer(conf.GetConnectionString("MyStore"));
+                optionsBuilder
+                    .UseSqlServer(conf.GetConnectionString("MyStore"));
             }
         }
 

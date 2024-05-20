@@ -11,6 +11,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\StaffInsert.xaml.cs">
+    <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\OrderListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\ProductDetailView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\ProductsManageView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\StaffsManageView.xaml.cs">
@@ -28,6 +37,15 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\StaffInsert.xaml">
+    <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\OrderListView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\ProductDetailView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\ProductsManageView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\StaffsManageView.xaml">
