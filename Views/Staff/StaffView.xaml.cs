@@ -28,6 +28,7 @@ namespace Estore.Views.Staff
             InitializeComponent();
             _productRepository = productRepository;
             _orderRepository = orderRepository;
+            Application.Current.Properties["role"] = "staff";
         }
 
         private void NavigateToProducts(object sender, RoutedEventArgs e)

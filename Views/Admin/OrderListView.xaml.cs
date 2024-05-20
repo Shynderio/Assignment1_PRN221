@@ -25,7 +25,8 @@ namespace Estore.Views.Admin
             InitializeComponent();
             DataContext = this;
             _orderRepository = orderRepository;
-            _isStaff = false;
+            string role = (string)Application.Current.Properties["role"]!;
+            _isStaff = role.Equals("staff");
             InitializeOrdersAsync();
         }
 

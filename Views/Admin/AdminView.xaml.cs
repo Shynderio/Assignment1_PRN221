@@ -30,6 +30,7 @@ namespace Estore.Views.Admin
             InitializeComponent();
             _productRepository = productRepository;
             _orderRepository = orderRepository;
+            Application.Current.Properties["role"] = "admin";
         }
 
         private void NavigateToProducts(object sender, RoutedEventArgs e)
