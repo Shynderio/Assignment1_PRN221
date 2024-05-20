@@ -5,7 +5,8 @@ namespace Estore.Repositories
     public interface IProductRepository
     {
         Task<IEnumerable<Category>> GetCategories();
-        Task<IEnumerable<Product>> GetProducts(string keyword, List<int> categoryIds);
+        Task<IEnumerable<Product>> GetProducts();
+        Task<int> GetTotalProducts();
         Task<Product> GetProductByID(int productId);
         Task<Product> InsertProduct(Product product);
         Task<IEnumerable<Product>> DeleteProduct(int productId);

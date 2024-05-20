@@ -24,31 +24,21 @@ namespace Estore.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetProducts(string keyword, List<int> categoryIds)
+        public async Task<IEnumerable<Product>> GetProducts()
         {
             try
             {
-                MessageBox.Show("Into GetProducts");
-                var products = await _storeContext.Products.ToArrayAsync();
-                if (products != null && products.Any())
-                {
-                    if (!string.IsNullOrEmpty(keyword))
-                    {
-                        products = products.Where(o => o.ProductName.Contains(keyword)).ToArray();
-                    }
-                    if (categoryIds != null && categoryIds.Any())
-                    {
-                        products = products.Where(o => categoryIds.Contains(o.CategoryId)).ToArray();
-                    }
-                    return products.OrderBy(o => o.ProductName);
-                }
-                return Enumerable.Empty<Product>();
+                return await _storeContext.Products.OrderBy(o => o.ProductId).ToArrayAsync();
             }
             catch (Exception e)
             {
                 MessageBox.Show($"Error: {e.Message}");
                 return Enumerable.Empty<Product>();
             }
+        }
+        public async Task<int> GetTotalProducts()
+        {
+            return await _storeContext.Products.Select(o => o.ProductId).Distinct().CountAsync();
         }
 
         public async Task<Product> GetProductByID(int productId)
@@ -110,12 +100,12 @@ namespace Estore.Repositories
                     throw new Exception($"Product with id [{productId}] already had order(s) so that it cannot be deleted");
                 _storeContext.Products.Remove(product);
                 await _storeContext.SaveChangesAsync();
-                return await GetProducts(string.Empty, new List<int>());
+                return await GetProducts();
             }
             catch (Exception e)
             {
                 MessageBox.Show($"Error: {e}");
-                return await GetProducts(string.Empty, new List<int>());
+                return await GetProducts();
             }
         }
 

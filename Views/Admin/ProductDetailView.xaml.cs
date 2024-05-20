@@ -1,4 +1,5 @@
 ﻿using Estore.Models;
+using Estore.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,14 @@ namespace Estore.Views.Admin
     /// </summary>
     public partial class ProductDetailView : Page
     {
-        public ProductDetailView()
+        private readonly IProductRepository _productRepository;
+        public ProductDetailView(IProductRepository productRepository)
         {
+            _productRepository = productRepository;
             InitializeComponent();
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -41,7 +44,9 @@ namespace Estore.Views.Admin
                 {
                     CategoryId = id,
                     ProductName = productName.Text,
+                    UnitPrice = price,
                 };
+                await _productRepository.InsertProduct(product);
             }
             catch (Exception ex)
             {
