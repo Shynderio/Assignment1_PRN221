@@ -35,8 +35,8 @@ namespace Estore.Views.Admin
 
         private void NavigateToProducts(object sender, RoutedEventArgs e)
         {
-            var productManager = new ProductsManageView();
-            ContentFrame.Navigate(productManager);
+            var productManager = new ProductsManageView(_productRepository);
+            Content = productManager;
         }
 
         private void NavigateToStaffs(object sender, RoutedEventArgs e)
