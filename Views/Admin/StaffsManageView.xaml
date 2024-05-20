@@ -1,0 +1,81 @@
+﻿<Window x:Class="Estore.Views.Admin.StaffsManageView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Estore.Views.Admin"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="ProfileView">
+ 
+    <Grid>
+        
+        <DockPanel VerticalAlignment="Top" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Background="LightBlue" Orientation="Vertical"
+                    HorizontalAlignment="Stretch" >
+                    <Label Name="lbTitle" Foreground="Red" FontWeight="DemiBold" 
+          FontSize="20" Content="Staff Information"  HorizontalAlignment="Center"/>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Width="Auto">
+                        <TextBlock VerticalAlignment="Center"  HorizontalAlignment="Right" Margin="0,0,10,0">Name</TextBlock>
+                        <TextBox x:Name="txtName" HorizontalAlignment="Right" Width="300" Margin="0,0,20,0"></TextBox>
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,10,0"> Role </TextBlock>
+                        <ComboBox Name="cbxRole" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>All</ComboBoxItem>
+                            <ComboBoxItem>Staff</ComboBoxItem>
+                            <ComboBoxItem>Admin</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock VerticalAlignment="Center" Margin="20,0,10,0"> Total Orders</TextBlock>
+                        <ComboBox Name="cbxOrders" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>Default</ComboBoxItem>
+                            <ComboBoxItem>Increase</ComboBoxItem>
+                            <ComboBoxItem>Decrease</ComboBoxItem>
+                        </ComboBox>
+                        <Button Width="50" Click="Button_Click" Content="Search" Margin="20,0,0,0" />
+                        <Button Width="Auto" Click="Button_Click_1" Content="Add new staff" Margin="20,0,0,0" />
+                       
+                    </StackPanel>
+
+
+                    <StackPanel Background="LightBlue" Orientation="Vertical"
+                    HorizontalAlignment="Stretch" Height="20"></StackPanel>
+
+                </StackPanel>
+
+                <ListView Grid.Row="2" Name="listViewStaff" Width="Auto" Height="Auto"  SelectionChanged="listViewStaff_selected">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Staff ID"  Width="100" 
+                    DisplayMemberBinding="{Binding Path=Item1.StaffId }"/>
+                            <GridViewColumn Header="Staff Name" Width="300">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Item1.Name}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Role"  Width="100" 
+                    DisplayMemberBinding="{Binding Path=Item1.Role }"/>
+                            <GridViewColumn Header="Total Order"  Width="300"
+DisplayMemberBinding="{Binding Path=Item2 }"/>
+                            
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Button Grid.Row="3" x:Name="btnClose" Margin="10"                        
+        HorizontalAlignment="Right" VerticalAlignment="Bottom"
+        Width="80" Content="Close" Click="btnClose_Click"/>
+
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

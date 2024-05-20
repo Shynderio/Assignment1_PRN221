@@ -1,5 +1,6 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using Estore.Views.Admin;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
@@ -24,13 +25,14 @@ namespace Estore
         {
             services.AddDbContext<MyStoreContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddSingleton<MainWindow>();
+            services.AddScoped<IStaffRepository, StaffRepository>();
+            services.AddSingleton<StaffsManageView>();
 
         }
 
         private void OnStartUp(object sender, StartupEventArgs e)
         {
-            var newWindow = serviceProvider.GetService<MainWindow>();
+            var newWindow = serviceProvider.GetService<StaffsManageView>();
             newWindow.Show();
         }
     }
