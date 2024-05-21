@@ -1,4 +1,5 @@
 ﻿using Estore.Models;
+using Estore.Session_Login;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,15 @@ namespace Estore.Views
     {
         private readonly MyStoreContext context;
 
-        public ProfileView(Models.Staff staff)
+        public ProfileView()
         {
+            SessionManage sessionManage = SessionManage.Instance;
+            string username = (string)sessionManage.GetSession("Username");
+
             InitializeComponent();
             context = new MyStoreContext();
+            var staff = context.Staffs.FirstOrDefault(o =>  o.Name == username);
+
             this.DataContext = staff;
         }
 

@@ -13,9 +13,6 @@
     <Compile Update="Views\Staff\ProfileView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Staff\profileWindowView.xaml.cs">
-    <SubType>Code</SubType>
-    </Compile>
     <Compile Update="Views\Admin\OrderListView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -52,9 +49,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Staff\ProfileView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Views\Staff\profileWindowView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Staff\StaffView.xaml">

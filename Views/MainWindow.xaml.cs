@@ -22,13 +22,15 @@ namespace Estore
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly IProductRepository _productRepository;
+        IProductRepository _productRepository;
+        IOrderRepository _orderRepository;
         private readonly MyStoreContext _context;
 
-        public MainWindow(IProductRepository productRepository, MyStoreContext context)
+        public MainWindow(IProductRepository productRepository, MyStoreContext context, IOrderRepository orderRepository)
         {
             InitializeComponent();
             _productRepository = productRepository;
+            _orderRepository = orderRepository; 
             _context = context;
             //_context = new MyStoreContext();
         }
@@ -56,14 +58,16 @@ namespace Estore
                 if (staff.Role == 1)
                 {
                   
-                    profileWindowView profileWindowView = new profileWindowView(staff);
-                    profileWindowView.Show();
+                    //profileWindowView profileWindowView = new profileWindowView(staff);
+                    //profileWindowView.Show();
+                    AdminView adminView = new AdminView(_productRepository, _orderRepository);
+                    adminView.Show();
                     
                 }
                 else if (staff.Role == 2)
                 {
                     // Chuyển hướng đến StaffView
-                    StaffView staffView = new StaffView();
+                    StaffView staffView = new StaffView(_productRepository, _orderRepository);
                     staffView.Show();
                 }
 
