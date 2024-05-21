@@ -2,6 +2,7 @@
 using Estore.Repositories;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Estore.Views.Admin
 {
@@ -52,7 +53,7 @@ namespace Estore.Views.Admin
 
         private void btnNext_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (skip + take <= _totalProducts)
+            if (skip + take < _totalProducts)
             {
                 txtCurrent.Text = (++_currentPage).ToString();
                 skip += take;
@@ -71,8 +72,77 @@ namespace Estore.Views.Admin
         {
             keyword = tbxSearch.Text;
             skip = 0;
-            _currentProducts = _currentProducts.Where(o => o.ProductName.Contains(keyword)).Skip(skip).Take(take);
-            listProducts.ItemsSource = _currentProducts;
+            _currentProducts = _currentProducts.Where(o => o.ProductName.Contains(keyword));
+            _totalProducts = _currentProducts.Count();
+            _currentPage = _totalProducts == 0 ? 0 : 1;
+            _totalPages = _totalProducts / take;
+            txtCurrent.Text = _currentPage.ToString();
+            txtTotal.Text = (_totalProducts % take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
+            listProducts.ItemsSource = _currentProducts.Skip(skip).Take(take);
+        }
+
+        private void btnDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                // Find the DataGridRow that contains the button
+                DataGridRow row = FindParent<DataGridRow>(button);
+                if (row != null)
+                {
+                    // Get the item bound to the DataGridRow
+                    Product item = row.Item as Product;
+                    if (item != null)
+                    {
+                        var addProductView = new ProductDetailView(_productRepository, item.ProductId);
+                        this.NavigationService.Navigate(addProductView);
+                    }
+                }
+            }
+        }
+
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null) return null;
+            if (parentObject is T parent) return parent;
+            return FindParent<T>(parentObject);
+        }
+
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                // Find the DataGridRow that contains the button
+                DataGridRow row = FindParent<DataGridRow>(button);
+                if (row != null)
+                {
+                    // Get the item bound to the DataGridRow
+                    Product item = row.Item as Product;
+                    if (item != null)
+                    {
+                        // Show confirmation message box
+                        MessageBoxResult result = MessageBox.Show(
+                            $"Are you sure you want to delete {item.ProductName}?",
+                            "Confirmation",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning
+                        );
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            var products = await _productRepository.DeleteProduct(item.ProductId);
+                            skip = 0;
+                            _currentProducts = products.Where(o => o.ProductName.Contains(keyword));
+                            _totalProducts = _currentProducts.Count();
+                            _currentPage = _totalProducts == 0 ? 0 : 1;
+                            _totalPages = _totalProducts / take;
+                            txtCurrent.Text = _currentPage.ToString();
+                            txtTotal.Text = (_totalProducts % take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
+                            listProducts.ItemsSource = _currentProducts.Skip(skip).Take(take);
+                        }
+                    }
+                }
+            }
         }
     }
 }
