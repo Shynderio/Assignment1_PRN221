@@ -1,5 +1,7 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using Estore.Session_Login;
+using Estore.Views;
 using Estore.Views.Admin;
 using Estore.Views.Staff;
 using System.Text;
@@ -22,25 +24,59 @@ namespace Estore
     {
         IProductRepository _productRepository;
         IOrderRepository _orderRepository;
-        public MainWindow(IProductRepository productRepository, IOrderRepository orderRepository)
+        private readonly MyStoreContext _context;
+
+        public MainWindow(IProductRepository productRepository, MyStoreContext context, IOrderRepository orderRepository)
         {
             InitializeComponent();
             _productRepository = productRepository;
-            _orderRepository = orderRepository;
+            _orderRepository = orderRepository; 
+            _context = context;
+            //_context = new MyStoreContext();
         }
 
-        private void NavigateToAdminView(object sender, RoutedEventArgs e)
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            var adminView = new AdminView(_productRepository, _orderRepository);
-            adminView.Show();
-            Close();
-        }
+            SessionManage sessionManage = SessionManage.Instance;
+            string username = tbUsername.Text;
+            string password = pbPassword.Password;
 
-        private void NavigateToStaffView(object sender, RoutedEventArgs e)
-        {
-            var staffView = new StaffView(_productRepository, _orderRepository);
-            staffView.Show();
-            Close();
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Username và Password không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var staff = _context.Staffs.FirstOrDefault(s => s.Name == username && s.Password == password);
+
+            if (staff != null)
+            {
+                // Lưu thông tin đăng nhập vào session
+                sessionManage.SetSession("Username", staff.Name);
+                sessionManage.SetSession("Role", staff.Role);
+
+                if (staff.Role == 1)
+                {
+                  
+                    //profileWindowView profileWindowView = new profileWindowView(staff);
+                    //profileWindowView.Show();
+                    AdminView adminView = new AdminView(_productRepository, _orderRepository);
+                    adminView.Show();
+                    
+                }
+                else if (staff.Role == 2)
+                {
+                    // Chuyển hướng đến StaffView
+                    StaffView staffView = new StaffView(_productRepository, _orderRepository);
+                    staffView.Show();
+                }
+
+                this.Close(); // Đóng cửa sổ đăng nhập
+            }
+            else
+            {
+                MessageBox.Show("Sai Username hoặc Password.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
