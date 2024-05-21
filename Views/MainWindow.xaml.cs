@@ -1,5 +1,9 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using Estore.Session_Login;
+using Estore.Views;
+using Estore.Views.Admin;
+using Estore.Views.Staff;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,69 +22,56 @@ namespace Estore
     /// </summary>
     public partial class MainWindow : Window
     {
-        IProductRepository _productRepository;
-        public MainWindow(IProductRepository productRepository)
+        private readonly IProductRepository _productRepository;
+        private readonly MyStoreContext _context;
+
+        public MainWindow(IProductRepository productRepository, MyStoreContext context)
         {
             InitializeComponent();
             _productRepository = productRepository;
-        }
- 
-
-        private void RefreshProductList()
-        {
-            products.ItemsSource = _productRepository.GetProducts();
+            _context = context;
+            //_context = new MyStoreContext();
         }
 
-        private void AddProductButton_Click(object sender, RoutedEventArgs e)
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            // Here, you would open a dialog or a new window to gather product information
-            // and then add the product to the repository
-            // For demonstration purposes, let's assume there's a method to add a product
-            Product newProduct = new Product
+            SessionManage sessionManage = SessionManage.Instance;
+            string username = tbUsername.Text;
+            string password = pbPassword.Password;
+
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                ProductName = "New Product",
-                CategoryId = 1, // Assuming a default category ID
-                UnitPrice = 0 // Assuming a default unit price
-            };
-            _productRepository.InsertProduct(newProduct);
-            RefreshProductList();
-        }
-
-        private void UpdateProductButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (products.SelectedItem != null)
-            {
-                // Here, you would open a dialog or a new window to edit product information
-                // and then update the product in the repository
-                // For demonstration purposes, let's assume there's a method to update a product
-                Product selectedProduct = products.SelectedItem as Product;
-                // Update selectedProduct properties with new values
-                _productRepository.UpdateProduct(selectedProduct);
-                RefreshProductList();
+                MessageBox.Show("Username và Password không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
             }
-            else
-            {
-                MessageBox.Show("Please select a product to update.");
-            }
-        }
 
-        private void DeleteProductButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (products.SelectedItem != null)
+            var staff = _context.Staffs.FirstOrDefault(s => s.Name == username && s.Password == password);
+
+            if (staff != null)
             {
-                // Confirm deletion
-                MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this product?", "Confirm Deletion", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
+                // Lưu thông tin đăng nhập vào session
+                sessionManage.SetSession("Username", staff.Name);
+                sessionManage.SetSession("Role", staff.Role);
+
+                if (staff.Role == 1)
                 {
-                    // Delete the selected product from the repository
-                    Product selectedProduct = products.SelectedItem as Product;
-                    _productRepository.DeleteProduct(selectedProduct);
-                    RefreshProductList();
+                  
+                    profileWindowView profileWindowView = new profileWindowView(staff);
+                    profileWindowView.Show();
+                    
                 }
+                else if (staff.Role == 2)
+                {
+                    // Chuyển hướng đến StaffView
+                    StaffView staffView = new StaffView();
+                    staffView.Show();
+                }
+
+                this.Close(); // Đóng cửa sổ đăng nhập
             }
             else
             {
-                MessageBox.Show("Please select a product to delete.");
+                MessageBox.Show("Sai Username hoặc Password.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

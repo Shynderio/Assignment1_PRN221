@@ -1,0 +1,58 @@
+﻿<Window x:Class="Estore.Views.profileWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Estore.Views"
+        mc:Ignorable="d"
+        Title="profileWindowView" Height="450" Width="800">
+    <Grid Grid.Column="1" Grid.Row="1" Margin="10" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Rectangle Name="rtgForm" Width="380" Margin="0 70 0 0" Height="230" Fill="White" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <!--<Label Name="lblInstruction" Foreground="Red" FontWeight="DemiBold"
+                    FontSize="25" Content="Personal Profile"></Label>-->
+        <!--<Separator Margin="0,20,595,409" Height="1" Background="Red"></Separator>-->
+        <StackPanel Margin="215 80 220 15" Name="stpStaffInfo">
+
+            <Label Name="lblStaffID" Content="StaffID" FontWeight="Bold"></Label>
+            <TextBox Name="txtStaffID" HorizontalAlignment="Left"  VerticalAlignment="Center"
+                        IsReadOnly="True" Height="25" Width="340" FontSize="15"
+                        Text="{Binding Path=StaffId, Mode=Oneway}"></TextBox>
+            <Label Name="lblStaffName" Content="Staff Name" FontWeight="Bold"></Label>
+            <TextBox Name="txtStaffName" HorizontalAlignment="Left" 
+                        Height="25" Width="340"  VerticalAlignment="Center" FontSize="15"
+                        Text="{Binding Path=Name, Mode=Oneway}" IsReadOnly="True"></TextBox>
+            <Label Name="lblRole" Content="Staff Role" FontWeight="Bold"></Label>
+            <TextBox Name="txtRole" HorizontalAlignment="Left"  VerticalAlignment="Center"
+                        IsReadOnly="True" Text="{Binding Path=Role, Mode=Oneway}" Height="25" Width="340" FontSize="15"></TextBox>
+        </StackPanel>
+        <StackPanel Name="stpButtonHandle" Orientation="Horizontal" HorizontalAlignment="Left" Margin="240 250 20 15">
+            <Button x:Name="btnEditName" Click="btnEditName_Click" Margin="10" Width="130" Content="Edit Name" BorderBrush="White" Background="Pink" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+            <Button x:Name="btnChangePassword" Click="btnChangePassword_Click" Margin="10" Width="130" Content="Change Password" BorderBrush="White" Background="Pink" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+        </StackPanel>
+
+        <StackPanel Name="stpButtonChangeName" Visibility="Hidden" Orientation="Horizontal" HorizontalAlignment="Left" Margin="240 235 20 15">
+            <Button x:Name="btnUpdateName" Click="btnUpdateName_Click" Margin="10" Width="80" Content="Update" BorderBrush="#456FF0" Background="#456FF0" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+            <Button x:Name="btnCancelName" Click="btnCancelName_Click" Margin="10" Width="80" Content="Cancel" BorderBrush="#F52257" Background="#F75F41" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+        </StackPanel>
+        <!--change password-->
+        <StackPanel Margin="215 100 220 5" Name="stpPasswordTextBox" Visibility="Hidden">
+            <Label Name="lblOldPassword" Content="Old Password" FontWeight="Bold"></Label>
+            <PasswordBox Name="txtOldPassword" HorizontalAlignment="Left" 
+                    Height="25" Width="340"  VerticalAlignment="Center" FontSize="15"></PasswordBox>
+            <Label Name="lblPassword" Content="New Password" FontWeight="Bold"></Label>
+            <PasswordBox Name="txtPassword" HorizontalAlignment="Left" 
+                    Height="25" Width="340"  VerticalAlignment="Center" FontSize="15"></PasswordBox>
+            <Label Name="lblPassword_2" Content="Re-Password" FontWeight="Bold"></Label>
+            <PasswordBox Name="txtPassword_2" HorizontalAlignment="Left" 
+                    Height="25" Width="340"  VerticalAlignment="Center" FontSize="15" ></PasswordBox>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Name="stpButtonPassWord" HorizontalAlignment="Left" Margin="240 250 20 5" Visibility="Hidden">
+            <Button x:Name="btnUpdatePassWord" Click="btnUpdatePassWord_Click" Margin="10" Width="80" Content="Update" BorderBrush="#456FF0" Background="#456FF0" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+            <Button x:Name="btnCancelPassWord" Click="btnCancelPassWord_Click" Margin="10" Width="80" Content="Cancel" BorderBrush="#F52257" Background="#F75F41" FontWeight="Bold" Height="25" FontSize="14" Cursor="Hand"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

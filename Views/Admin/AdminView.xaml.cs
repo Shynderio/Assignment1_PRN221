@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Estore.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,18 @@ namespace Estore.Views.Admin
     /// </summary>
     public partial class AdminView : Window
     {
+        private readonly MyStoreContext context;
         public AdminView()
         {
             InitializeComponent();
+            context = new MyStoreContext();
+            loadProduct();
+        }
+        public void loadProduct()
+        {
+            List<Product> list = context.Products.Include(x => x.Category).ToList();
+            //Include giong kieu join bang
+            lvProduct.ItemsSource = list;
         }
     }
 }

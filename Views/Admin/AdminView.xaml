@@ -7,6 +7,15 @@
         mc:Ignorable="d"
         Title="AdminView" Height="450" Width="800">
     <Grid>
-        
+        <ListView x:Name="lvProduct" >
+            <ListView.View>
+                <GridView  >
+                    <GridViewColumn Width="50" Header="ProductId" DisplayMemberBinding="{Binding Path=ProductId}" ></GridViewColumn>
+                    <GridViewColumn Width="100" Header="ProductName" DisplayMemberBinding="{Binding Path=ProductName}"></GridViewColumn>
+                    <GridViewColumn Width="100" Header="CategoryId" DisplayMemberBinding="{Binding Path=Category.CategoryId}"></GridViewColumn>
+                    <GridViewColumn Width="100" Header="UnitPrice" DisplayMemberBinding="{Binding Path=UnitPrice}" ></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
