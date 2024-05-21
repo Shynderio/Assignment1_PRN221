@@ -23,6 +23,13 @@ namespace Estore.Repositories
             _storeContext.SaveChanges();
         }
 
+        public IEnumerable<Staff> GetStaffPadding(int page)
+        {
+            List<Staff> list;
+            list = _storeContext.Staffs.Skip((page-1)*5).Take(5).ToList();
+            return list;
+        }
+
         public void DeleteStaff(Staff staff)
         {
             try

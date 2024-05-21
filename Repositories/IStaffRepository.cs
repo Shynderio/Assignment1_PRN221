@@ -10,6 +10,8 @@ namespace Estore.Repositories
     public interface IStaffRepository
     {
         IEnumerable<Staff> GetStaffList();
+
+        IEnumerable<Staff> GetStaffPadding(int page);
         void AddNewStaff(Staff staff);
         void UpdateStaff(Staff staff);
         void DeleteStaff(Staff staff);

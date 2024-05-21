@@ -33,13 +33,13 @@ namespace Estore.Views.Staff
 
         private void NavigateToProducts(object sender, RoutedEventArgs e)
         {
-            var productManager = new ProductsManageView();
+            var productManager = new ProductsManageView(_productRepository);
             ContentFrame.Navigate(productManager);
         }
 
         private void NavigateToStaffs(object sender, RoutedEventArgs e)
         {
-            var staffManager = new StaffsManageView();
+            var staffManager = new StaffsManageView(this.ContentFrame);
             ContentFrame.Navigate(staffManager);
         }
 

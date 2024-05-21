@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Estore.Models;
 using Microsoft.EntityFrameworkCore;
 using Estore.Repositories;
+using System.Diagnostics.Metrics;
 
 namespace Estore.Views.Admin
 {
@@ -23,35 +24,28 @@ namespace Estore.Views.Admin
     /// Interaction logic for ProfileView.xaml
     /// </summary>
     /// 
-    public partial class StaffsManageView : Window
+    public partial class StaffsManageView : Page
     {
         IStaffRepository staffRepository;
-
+        private int indexNow;
+        private int totalIndex;
+        private readonly Frame _contentFrame;
         List<Tuple<Estore.Models.Staff, int>> lstStaffs;
-        public StaffsManageView(IStaffRepository staff)
+        public StaffsManageView(Frame content)
         {   
-            
-            
+            _contentFrame = content;
+            indexNow = 1;
+            totalIndex = 1;
             InitializeComponent();
-            staffRepository = staff;
-            loadData();
+        MyStoreContext dbContext = new MyStoreContext();
+        staffRepository = new StaffRepository(dbContext);
+        loadData();
         }
 
         //Action to tap
 
         
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            SearchStaff();
-        }
-
-        private void btnClose_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        //Function to write
 
         private int getTotalOrderByID(int idStaff)
         {
@@ -64,59 +58,7 @@ namespace Estore.Views.Admin
         }
 
 
-        private void SearchStaff()
-        {
-            var searchName = txtName.Text;
-            var searchRole = cbxRole.SelectedIndex;
-            var searchOrders = cbxOrders.SelectedIndex;
-
-            List<int> countArr = new List<int>();
-            //List<Tuple<Estore.Models.Staff, int>> combineList = new List<Tuple<Estore.Models.Staff, int>>();
-            var lstStaff = staffRepository.GetStaffList();
-
-            var listSearch = lstStaff;
-
-            if (searchName.Length > 0)
-            {
-                listSearch = listSearch.Where(p => p.Name.ToLower().Contains(searchName.ToLower()));
-            }
-
-         
-            //MessageBox.Show($"Name : {searchName}  Role : {searchRole} and Orders : {searchOrders}");
-            
-            if(searchRole != 0)
-            {
-                listSearch = listSearch.Where( p => p.Role == searchRole );
-            }
-            else { };
-
-           
-
-            foreach (var item in listSearch)
-            {
-                var totalOrders = getTotalOrderByID(item.StaffId);
-                countArr.Add(totalOrders);
-
-            }
-
-            
-
-
-            var combineList = listSearch.Zip(countArr, (staff, count) => new Tuple<Estore.Models.Staff, int>(staff, count)).ToList();
-            lstStaffs = combineList;
-
-            if(searchOrders == 1)
-            {
-
-                lstStaffs = combineList.OrderBy(item => item.Item2).ToList();
-            }
-            else if(searchOrders == 2)
-            {
-                lstStaffs = combineList.OrderByDescending(item => item.Item2).ToList();
-            }
-
-            listViewStaff.ItemsSource = lstStaffs;
-        }
+      
 
         private void loadData()
         {
@@ -131,33 +73,122 @@ namespace Estore.Views.Admin
 
             }
 
-
+            totalIndex = lstStaff.Count() / 5;
             lstStaffs = lstStaff.Zip(countArr, (staff, count) => new Tuple<Estore.Models.Staff, int>(staff, count)).ToList();
-
-            listViewStaff.ItemsSource = lstStaffs;
+            var listTem = lstStaffs.ToList();
+           listTem = listTem.Skip((indexNow - 1) * 5).Take(5).ToList();
+            dataGrid.ItemsSource = listTem;
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            // MainFrame.Content = new StaffInsert();
-            //new StaffUpdate().Show();
-        }
-
-        private void listViewStaff_selected(object sender, SelectionChangedEventArgs e)
-        {
-
-            if (listViewStaff.SelectedValue != null)
+           var ok =  MessageBox.Show("Do you want to delete?", "Delete", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+            if(ok == MessageBoxResult.OK)
             {
-                var selectedItem = (Tuple<Estore.Models.Staff, int>)listViewStaff.SelectedItem;
+                var button = sender as Button;
+                var dataId = button?.Tag as dynamic;
+                if(dataId != null)
+                {
+                    var staffId = dataId;
+                    var staffObj = staffRepository.GetStaffById(staffId);
+                    if(staffObj != null)
+                    {
+                        staffRepository.DeleteStaff(staffObj);
+                        loadData();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Error, Can't delete this employee!", "Error", MessageBoxButton.OK,MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void PaddingNext_Click(object sender, RoutedEventArgs e)
+        {
+            if (indexNow < totalIndex)
+            {
+                indexNow++;
+                var listTemp = lstStaffs.Skip((indexNow-1)*5).Take(5).ToList();
+                dataGrid.ItemsSource = listTemp;
+            }
+        }
+
+        private void PaddingPrevod_Click(object sender, RoutedEventArgs e)
+        {
+            if (indexNow > 1)
+            {
+                indexNow--;
+                var listTemp = lstStaffs.Skip((indexNow - 1) * 5).Take(5).ToList();
+                dataGrid.ItemsSource = listTemp;
+            }
+        }
+
+        private void btnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (dataGrid.SelectedValue != null)
+            {
+                var selectedItem = (Tuple<Estore.Models.Staff, int>)dataGrid.SelectedItem;
                 int staffId = selectedItem.Item1.StaffId;
 
-                StaffUpdate staffUpdate = new StaffUpdate(staffId);
-                staffUpdate.Show();
+                StaffUpdate staffUpdate = new StaffUpdate(staffId, _contentFrame);
+
+                _contentFrame.Content = staffUpdate;
             }
             else
             {
                 // Xử lý trường hợp không có mục nào được chọn
             }
         }
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+
+            searchFunc();
+
+        }
+        
+        private void searchFunc()
+        {
+            var name = txtName.Text;
+            var role = cbxRole.SelectedIndex;
+            var orders = cbxOrders.SelectedIndex;
+            indexNow = 1;
+            var listStaff = staffRepository.GetStaffList();
+            List<int> countArr = new List<int>();
+
+            if (name != null)
+            {
+                listStaff = listStaff.Where(p => p.Name.ToLower().Contains(name.ToLower())).ToList();
+            }
+
+            if (role != 0)
+            {
+                listStaff = listStaff.Where(p => p.Role == role).ToList();
+            }
+
+
+
+            foreach (var item in listStaff)
+            {
+                var totalOrders = getTotalOrderByID(item.StaffId);
+                countArr.Add(totalOrders);
+
+            }
+
+            totalIndex = listStaff.Count() / 5;
+            lstStaffs = listStaff.Zip(countArr, (staff, count) => new Tuple<Estore.Models.Staff, int>(staff, count)).ToList();
+            var listTem = lstStaffs.ToList();
+            listTem = listTem.Skip((indexNow - 1) * 5).Take(5).ToList();
+            dataGrid.ItemsSource = listTem;
+        }
+       
+
+     
     }
 }

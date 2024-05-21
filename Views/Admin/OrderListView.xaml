@@ -48,7 +48,7 @@
         <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
             <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
                        Panel.ZIndex="1" Text="Staff name or Order Id..."
-                       Visibility="{Binding ElementName=SearchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                       Visibility="{Binding ElementName=SearchTextBox, Path=Text, Converter={StaticResource BoolToVis}}"/>
             <TextBox x:Name="SearchTextBox" Style="{StaticResource textboxSearch}" TextChanged="SearchTextBox_TextChanged"/>
             <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
                        Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>

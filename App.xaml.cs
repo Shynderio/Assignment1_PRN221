@@ -34,7 +34,7 @@ namespace Estore
 
         private void OnStartUp(object sender, StartupEventArgs e)
         {
-            var newWindow = serviceProvider.GetService<StaffsManageView>();
+            var newWindow = serviceProvider.GetService<MainWindow>();
             newWindow.Show();
         }
     }
