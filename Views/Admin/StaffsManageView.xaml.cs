@@ -152,7 +152,14 @@ namespace Estore.Views.Admin
             searchFunc();
 
         }
-        
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            AddStaffView addView = new AddStaffView(_contentFrame);
+            _contentFrame.Content = addView;
+        }
+
+
         private void searchFunc()
         {
             var name = txtName.Text;

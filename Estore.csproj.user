@@ -7,11 +7,14 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Views\Admin\AddStaffView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Admin\AdminView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\StaffInsert.xaml.cs">
-    <SubType>Code</SubType>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\OrderListView.xaml.cs">
       <SubType>Code</SubType>
@@ -33,11 +36,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Views\Admin\AddStaffView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Admin\AdminView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\StaffInsert.xaml">
-    <SubType>Designer</SubType>
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\OrderListView.xaml">
       <SubType>Designer</SubType>
