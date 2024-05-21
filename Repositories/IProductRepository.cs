@@ -1,18 +1,15 @@
 ﻿using Estore.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Estore.Repositories
 {
     public interface IProductRepository
     {
-        IEnumerable<Product> GetProducts();
-        Product GetProductByID(int productId);
-        void InsertProduct(Product product);
-        void DeleteProduct(Product product);
-        void UpdateProduct(Product product);
+        Task<IEnumerable<Category>> GetCategories();
+        Task<IEnumerable<Product>> GetProducts();
+        Task<int> GetTotalProducts();
+        Task<Product> GetProductByID(int productId);
+        Task<Product> InsertProduct(Product product);
+        Task<IEnumerable<Product>> DeleteProduct(int productId);
+        Task<Product> UpdateProduct(Product product);
     }
 }
