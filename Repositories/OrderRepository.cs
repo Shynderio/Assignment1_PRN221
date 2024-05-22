@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Estore.Repositories
@@ -34,22 +35,51 @@ namespace Estore.Repositories
                 .ToListAsync();
 
         }
-
-        public async Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate)
+        public async Task AddOrderAsync(Order order)
         {
-            return await _storeContext.Orders
-                .Include (o => o.Staff)
-                .Include(o => o.OrderDetails)
-                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
-                .Select(order => new OrderDto
+            _storeContext.Orders.Add(order);
+            await _storeContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderId(int orderId)
+        {
+            var orderDetails = await _storeContext.OrderDetails
+                .Where(od => od.OrderId == orderId)
+                .Include(od => od.Product)
+                .Select(od => new OrderDetail
                 {
-                    OrderId = order.OrderId,
-                    OrderDate = order.OrderDate,
-                    StaffName = order.Staff.Name,
-                    TotalPrice = order.OrderDetails.Sum(od => od.Quantity * od.UnitPrice)
+                    OrderDetailId = od.OrderDetailId,
+                    OrderId = od.OrderId,
+                    ProductId = od.ProductId,
+                    Quantity = od.Quantity,
+                    UnitPrice = od.UnitPrice,
                 })
                 .ToListAsync();
+
+            return orderDetails;
         }
+
+        public async Task DeleteOrderAsync(int orderId)
+        {
+            try
+            {
+                var orderToDelete = await _storeContext.Orders.FindAsync(orderId);
+                if (orderToDelete != null)
+                {
+                    _storeContext.Orders.Remove(orderToDelete);
+                    await _storeContext.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new ArgumentException("Order not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public class OrderDto
         {
             public int OrderId { get; set; }
@@ -58,8 +88,6 @@ namespace Estore.Repositories
             public string StaffName { get; set; }
             public decimal TotalPrice { get; set; }
         }
-
-
 
     }
 }

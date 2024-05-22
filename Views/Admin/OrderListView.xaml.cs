@@ -2,11 +2,12 @@
 using Estore.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using static Estore.Repositories.OrderRepository;
 
 namespace Estore.Views.Admin
@@ -21,30 +22,23 @@ namespace Estore.Views.Admin
         private List<OrderDto> _filteredOrders;
         private string _searchTerm;
         private bool _isStaff;
-        private DateTime _startDate;
-        private DateTime _endDate;
         public OrderListView(IOrderRepository orderRepository)
         {
             InitializeComponent();
             DataContext = this;
             _orderRepository = orderRepository;
             string role = (string)Application.Current.Properties["role"]!;
-            _startDate = DateTime.Now.AddMonths(-1);
-            _endDate = DateTime.Now;
-            EndDate.Text = _endDate.ToString("dd/MM/yyyy");
-            StartDate.Text = _startDate.ToString("dd/MM/yyyy");
             _isStaff = role.Equals("staff");
             InitializeOrdersAsync();
-            
         }
-
 
         private async Task InitializeOrdersAsync()
         {
-            _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+            _allOrders = await _orderRepository.GetAllOrdersAsync();
             _filteredOrders = _allOrders;
             UpdatePagedView();
         }
+
         public int CurrentPage
         {
             get { return _currentPage; }
@@ -91,7 +85,6 @@ namespace Estore.Views.Admin
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -99,98 +92,75 @@ namespace Estore.Views.Admin
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-
-
-        //private void StartDate_Changed(object sender, TextChangedEventArgs e)
-        //{
-        //    string searchText = StartDate.Text.Trim();
-
-        //    if (string.IsNullOrEmpty(searchText) || DateTime.Parse())
-        //    {
-        //        // If search text is empty, reset to display all orders
-        //        return;
-        //    }
-        //    else
-        //    {
-        //        // Perform the search by order ID or staff name
-        //        int orderId;
-        //        bool isNumeric = int.TryParse(searchText, out orderId);
-
-        //        if (isNumeric)
-        //        {
-        //            _filteredOrders = _allOrders.Where(o => o.OrderId == orderId).ToList();
-        //        }
-        //        else
-        //        {
-        //            _filteredOrders = _allOrders.Where(o => o.StaffName.ToLower().Contains(searchText.ToLower())).ToList();
-        //        }
-        //    }
-
-        //    // Reset current page to 1 after search
-        //    CurrentPage = 1;
-        //    UpdatePagedView();
-        //}
-
-
-
-        private void StartDatePicker_Click(object sender, RoutedEventArgs e)
+        private async void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            DatePicker1.IsDropDownOpen = true;
-        }
-        private void EndDatePicker_Click(object sender, RoutedEventArgs e)
-        {
-            DatePicker2.IsDropDownOpen = true;
-        }
+            string searchText = SearchTextBox.Text.Trim();
 
-        private async void Selected_StartDate(object sender, RoutedEventArgs e)
-        {
-            if (DatePicker1.SelectedDate.HasValue)
+            if (string.IsNullOrEmpty(searchText))
             {
-                // Update the TextBox with the selected date
-                StartDate.Text = DatePicker1.SelectedDate.Value.ToString("dd/MM/yyyy");
-                // Hide the DatePicker after a date is selected
-                DatePicker1.Visibility = Visibility.Collapsed;
-                _startDate = DatePicker1.SelectedDate.Value;
-                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
                 _filteredOrders = _allOrders;
-                CurrentPage = 1;
-                UpdatePagedView();
+            }
+            else
+            {
+                int orderId;
+                bool isNumeric = int.TryParse(searchText, out orderId);
+
+                if (isNumeric)
+                {
+                    _filteredOrders = _allOrders.Where(o => o.OrderId == orderId).ToList();
+                }
+                else
+                {
+                    _filteredOrders = _allOrders.Where(o => o.StaffName.ToLower().Contains(searchText.ToLower())).ToList();
+                }
+            }
+
+            CurrentPage = 1;
+            UpdatePagedView();
+        }
+
+        private void AddOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddOrderView addOrderView = new AddOrderView(_orderRepository);
+            addOrderView.ShowDialog();
+
+            LoadOrders();
+        }
+
+        private void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (dataGrid.SelectedItem is OrderDto selectedOrder)
+            {
+                OrderDetailView orderDetailView = new OrderDetailView(selectedOrder.OrderId);
+                orderDetailView.ShowDialog();
             }
         }
 
-        private async void Selected_EndDate(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (DatePicker2.SelectedDate.HasValue)
+            if (dataGrid.SelectedItem is OrderDto selectedOrder)
             {
-                // Update the TextBox with the selected date
-                EndDate.Text = DatePicker2.SelectedDate.Value.ToString("dd/MM/yyyy");
-                // Hide the DatePicker after a date is selected
-                DatePicker2.Visibility = Visibility.Collapsed;
-                _endDate = DatePicker2.SelectedDate.Value;
+                try
+                {
+                    MessageBoxResult result = MessageBox.Show("Are you sure you want to delete this order?", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        await _orderRepository.DeleteOrderAsync(selectedOrder.OrderId);
 
-                //if (_startDate)
-                //{
-                    // Fetch orders only if both dates are set
-                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
-                _filteredOrders = _allOrders;
-                CurrentPage = 1;
-                UpdatePagedView();
-
+                        await LoadOrders();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
-
-        //private void Button_Calendar_Click(object sender, RoutedEventArgs e)
-        //{
-        //    DatePicker.IsDropDownOpen = true;
-        //}
-
-
-        public class OrderDetail
+        private async Task LoadOrders()
         {
-            // Assuming OrderDetail properties, adjust as necessary
+            _allOrders = await _orderRepository.GetAllOrdersAsync();
+            UpdatePagedView();
         }
     }
-
 }

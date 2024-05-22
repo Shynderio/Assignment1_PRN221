@@ -11,6 +11,8 @@ namespace Estore.Repositories
     public interface IOrderRepository
     {
         Task<List<OrderDto>> GetAllOrdersAsync();
-        Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate);
+        Task AddOrderAsync(Order order);
+        Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderId(int orderId);
+        Task DeleteOrderAsync(int orderId);
     }
 }
