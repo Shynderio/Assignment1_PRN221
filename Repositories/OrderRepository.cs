@@ -80,12 +80,28 @@ namespace Estore.Repositories
             }
         }
 
+        public async Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate)
+        {
+            return await _storeContext.Orders
+                .Include (o => o.Staff)
+                .Include(o => o.OrderDetails)
+                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                .Select(order => new OrderDto
+                {
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    StaffName = order.Staff.Name,
+                    TotalPrice = order.OrderDetails.Sum(od => od.Quantity * od.UnitPrice)
+                })
+                .ToListAsync();
+        }
+
         public class OrderDto
         {
             public int OrderId { get; set; }
             public DateTime OrderDate { get; set; }
             public DateTime EndDate { get; set; }
-            public string StaffName { get; set; }
+            public string StaffName { get; set; } = string.Empty;
             public decimal TotalPrice { get; set; }
         }
 

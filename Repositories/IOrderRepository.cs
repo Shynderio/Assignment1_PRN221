@@ -14,5 +14,6 @@ namespace Estore.Repositories
         Task AddOrderAsync(Order order);
         Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderId(int orderId);
         Task DeleteOrderAsync(int orderId);
+        Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate);
     }
 }
