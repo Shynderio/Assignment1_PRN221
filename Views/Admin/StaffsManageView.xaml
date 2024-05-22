@@ -1,14 +1,120 @@
 ﻿<Page x:Class="Estore.Views.Admin.StaffsManageView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Estore.Views.Admin"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="StaffsManageView">
+      Title="ProfileView">
 
-    <Grid>
-        
+    <Grid Background="WhiteSmoke">
+
+        <DockPanel VerticalAlignment="Top" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Staffs" Grid.Row="1" Grid.Column="0" FontSize="32" FontWeight="SemiBold" Margin="0 20 0 0"
+                    HorizontalAlignment="Left" Foreground="Black"/>
+                <Button Click="btnAdd_Click" Grid.Row="1" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                        <TextBlock Text="Add New Staff"/>
+                    </StackPanel>
+                </Button>
+                <Separator Height="1" Grid.Row="3" Grid.ColumnSpan="2" Background="White" Margin="0 -1 0 10"/>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0 10 0 0 ">
+                    <Button Content="" Style="{StaticResource tabButton}"/>
+                </StackPanel>
+
+                <TextBlock Text="Staffs List" Grid.Row="4" Grid.Column="0" FontSize="18" FontWeight="SemiBold"
+                    Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                
+
+                <Grid Width="600" HorizontalAlignment="Right" Grid.Row="4" Grid.Column="1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Width="Auto" Height="20">
+                        <TextBlock VerticalAlignment="Center"  HorizontalAlignment="Right" Margin="0,0,10,0">Name</TextBlock>
+                        <TextBox x:Name="txtName" HorizontalAlignment="Right" Width="150" Margin="0,0,20,0"></TextBox>
+                        <TextBlock VerticalAlignment="Center" Margin="0,0,10,0"> Role</TextBlock>
+                        <ComboBox Name="cbxRole" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>All</ComboBoxItem>
+                            <ComboBoxItem>Staff</ComboBoxItem>
+                            <ComboBoxItem>Admin</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock VerticalAlignment="Center" Margin="20,0,10,0"> Total Orders</TextBlock>
+                        <ComboBox Name="cbxOrders" Width="80" SelectedIndex="0">
+                            <ComboBoxItem>Default</ComboBoxItem>
+                            <ComboBoxItem>Increase</ComboBoxItem>
+                            <ComboBoxItem>Decrease</ComboBoxItem>
+                        </ComboBox>
+
+                        <Button Width="auto" Margin="30 0 15 0" Click="btnSearch_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="0 0 5 0">Search</TextBlock>
+                                <Icon:PackIconMaterial HorizontalAlignment="Right" Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center" Foreground="Gray" Margin="0 0 5 0"/>
+                                
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                    
+                </Grid>
+                <DataGrid Style="{DynamicResource DataGridStyle1}" 
+                    CellStyle="{DynamicResource DataGridCellStyle1}" 
+                    ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
+                    RowStyle="{DynamicResource DataGridRowStyle1}" 
+                    Grid.Row="5" Grid.ColumnSpan="2" x:Name="dataGrid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Staff ID" IsReadOnly="True" Width="*" Binding="{Binding Item1.StaffId}"/>
+                        <DataGridTextColumn Header="Staff Name" IsReadOnly="True" Width="*" Binding="{Binding Item1.Name}"/>
+                        <DataGridTextColumn Header="Role" IsReadOnly="True" Width="*" Binding="{Binding Item1.Role}"/>
+                        <DataGridTextColumn Header="Total Order" IsReadOnly="True" Width="*" Binding="{Binding Item2}"/>
+                        <DataGridTemplateColumn Header="Operations" IsReadOnly="True" Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Click="btnUpdate_Click" Style="{StaticResource gridViewButton}">
+                                            <Icon:PackIconMaterial Kind="Pencil" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+
+                                        <Button x:Name="deleteBtn" Style="{StaticResource gridDeleteButton}" Click="btnDelete_Click" Tag="{Binding Item1.StaffId}">
+                                            <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Border Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Right" BorderBrush="Gray" BorderThickness="1"
+                    CornerRadius="5" Padding="5" Background="White" Margin="0 10 10 10">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource pagingButton}" Click="PaddingPrevod_Click">
+                            <Icon:PackIconMaterial Kind="ChevronLeft" Style="{StaticResource pagingButtonIcon}"/>
+                        </Button>
+                        <Rectangle Width="1" Fill="LightGray" Margin="3 7"/>
+                        <Rectangle Width="1" Fill="LightGray" Margin="3 7"/>
+                        <Button Style="{StaticResource pagingButton}" Click="PaddingNext_Click">
+                            <Icon:PackIconMaterial Kind="ChevronRight" Style="{StaticResource pagingButtonIcon}"/>
+                        </Button>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
     </Grid>
 </Page>

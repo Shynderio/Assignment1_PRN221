@@ -39,7 +39,7 @@ namespace Estore.Views.Staff
 
         private void NavigateToStaffs(object sender, RoutedEventArgs e)
         {
-            var staffManager = new StaffsManageView();
+            var staffManager = new StaffsManageView(this.ContentFrame);
             ContentFrame.Navigate(staffManager);
         }
 
