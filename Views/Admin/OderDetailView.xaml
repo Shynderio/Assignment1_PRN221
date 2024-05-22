@@ -33,7 +33,7 @@
         <StackPanel>
 
             <TextBlock Text="Order ID" Style="{StaticResource LabelStyle}"/>
-            <TextBox x:Name="OrderIdTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
+            <TextBox x:Name="OrderIdTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}" />
 
             <TextBlock Text="Order Date" Style="{StaticResource LabelStyle}"/>
             <TextBox x:Name="OrderDateTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
@@ -45,7 +45,7 @@
             <DataGrid x:Name="ProductDataGrid" Style="{StaticResource DataGridStyle}" Height="122">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*"/>
+                    <DataGridTextColumn Header="Product Name" Binding="{Binding Product.ProductName}" Width="*"/>
                     <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="Auto"/>
                     <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice}" Width="Auto"/>
                     <!-- Add more columns as needed -->

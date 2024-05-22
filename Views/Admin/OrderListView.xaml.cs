@@ -1,5 +1,6 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using Estore.Session_Login;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,6 +24,7 @@ namespace Estore.Views.Admin
         private string _searchTerm;
         private bool _isStaff;
         private DateTime _startDate;
+        string _staffName = string.Empty;
 
         private DateTime _endDate;
         public OrderListView(IOrderRepository orderRepository)
@@ -33,18 +35,31 @@ namespace Estore.Views.Admin
             string role = (string)Application.Current.Properties["role"]!;
             _startDate = DateTime.Now.AddMonths(-1);
 
+            SessionManage sessionManage = SessionManage.Instance;
+            _staffName = (string)sessionManage.GetSession("Username");
+            
+
             _endDate = DateTime.Now;
 
             EndDate.Text = _endDate.ToString("dd/MM/yyyy");
 
             StartDate.Text = _startDate.ToString("dd/MM/yyyy");
             _isStaff = role.Equals("staff");
+
             InitializeOrdersAsync();
         }
 
         private async Task InitializeOrdersAsync()
         {
-            _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+            if (_isStaff)
+            {
+                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate, _staffName);
+            }
+            else
+            {
+                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+
+            }
             _filteredOrders = _allOrders;
             UpdatePagedView();
         }
@@ -182,7 +197,15 @@ namespace Estore.Views.Admin
 
                 _startDate = DatePicker1.SelectedDate.Value;
 
-                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+                if (_isStaff)
+                {
+                _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate, _staffName);
+
+                }
+                else
+                {
+                    _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+                }
 
                 _filteredOrders = _allOrders;
 
@@ -221,8 +244,15 @@ namespace Estore.Views.Admin
                 //{
 
                 // Fetch orders only if both dates are set
-
+                if (_isStaff)
+                {
+                    _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate, _staffName);
+                }
+                else
+                {
                 _allOrders = await _orderRepository.GetOrdersByPeriod(_startDate, _endDate);
+
+                }
 
                 _filteredOrders = _allOrders;
 

@@ -48,7 +48,7 @@
         <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="220 0 0 0">
             <TextBlock Margin="20,0,35,0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
                        Panel.ZIndex="2" Text="Insert date"
-                       Visibility="{Binding ElementName=StartDate, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                       Visibility="{Binding ElementName=StartDate, Converter={StaticResource BoolToVis}}"/>
             <TextBox x:Name="StartDate" Style="{StaticResource textboxSearch}" Panel.ZIndex="1" IsEnabled="False"/>
 
             <Button  Width="20" Height="20" VerticalAlignment="Center"
@@ -64,7 +64,7 @@
         <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="520 0 0 0">
             <TextBlock Margin="20,0,35,0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
                        Panel.ZIndex="2" Text="Insert date"
-                       Visibility="{Binding ElementName=EndDate, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
+                       Visibility="{Binding ElementName=EndDate, Converter={StaticResource BoolToVis}}"/>
             <TextBox x:Name="EndDate" Style="{StaticResource textboxSearch}"  IsEnabled="False" Panel.ZIndex="1"/>
 
             <Button  Width="20" Height="20" VerticalAlignment="Center"
@@ -90,11 +90,15 @@
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
                                 <Button Style="{StaticResource gridViewButton}"
-                                Visibility="{Binding Path=DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}"
+                              
                                 Click="EditButton_Click">
+                                    <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
+                                </Button>
+                                <Button Style="{StaticResource gridViewButton}"
+                              Visibility="{Binding Path=DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}"    
+                                    Click="EditButton_Click">
                                     <Icon:PackIconMaterial Kind="Pencil" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-
                                 <Button Style="{StaticResource gridDeleteButton}" 
                                 Visibility="{Binding Path=DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}"
                                 Click="DeleteButton_Click">

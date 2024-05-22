@@ -41,19 +41,17 @@ namespace Estore.Repositories
             await _storeContext.SaveChangesAsync();
         }
 
+        public async Task<Order> GetOrderByOrderId(int orderId)
+        {
+            var order = _storeContext.Orders.Include(o => o.Staff).FirstOrDefault(o => o.OrderId == orderId);
+
+            return order;
+        }
         public async Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderId(int orderId)
         {
             var orderDetails = await _storeContext.OrderDetails
                 .Where(od => od.OrderId == orderId)
                 .Include(od => od.Product)
-                .Select(od => new OrderDetail
-                {
-                    OrderDetailId = od.OrderDetailId,
-                    OrderId = od.OrderId,
-                    ProductId = od.ProductId,
-                    Quantity = od.Quantity,
-                    UnitPrice = od.UnitPrice,
-                })
                 .ToListAsync();
 
             return orderDetails;
@@ -95,6 +93,24 @@ namespace Estore.Repositories
                 })
                 .ToListAsync();
         }
+
+        public async Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate, string staffName)
+        {
+            var staff = _storeContext.Staffs.FirstOrDefault(s => s.Name == staffName);
+            return await _storeContext.Orders
+                .Include(o => o.Staff)
+                .Include(o => o.OrderDetails)
+                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate && o.StaffId == staff.StaffId)
+                .Select(order => new OrderDto
+                {
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    StaffName = order.Staff.Name,
+                    TotalPrice = order.OrderDetails.Sum(od => od.Quantity * od.UnitPrice)
+                })
+                .ToListAsync();
+        }
+
 
         public class OrderDto
         {

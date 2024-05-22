@@ -23,8 +23,13 @@ namespace Estore.Views.Admin
             try
             {
                 var orderDetails = await _orderRepository.GetOrderDetailsByOrderId(_orderId);
+                var order = await _orderRepository.GetOrderByOrderId(_orderId);
 
                 ProductDataGrid.ItemsSource = orderDetails;
+
+                OrderIdTextBox.Text = order.OrderId.ToString();
+                OrderDateTextBox.Text = order.OrderDate.ToString();
+                StaffNameTextBox.Text   = order.Staff.Name.ToString();
             }
             catch (Exception e)
             {
