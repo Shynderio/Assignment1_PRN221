@@ -42,16 +42,21 @@
 
         <TextBlock Text="Orders List" Grid.Row="4" FontSize="18" FontWeight="SemiBold"
                  Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Text="Filter by" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
+        <TextBlock Text="Search by order date" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
                  Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
         <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
-            <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
-                       Panel.ZIndex="1" Text="Staff name or Order Id..."
+            <TextBlock Margin="20,0,35,0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                       Panel.ZIndex="2" Text="Insert date"
                        Visibility="{Binding ElementName=SearchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-            <TextBox x:Name="SearchTextBox" Style="{StaticResource textboxSearch}" TextChanged="SearchTextBox_TextChanged"/>
-            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
-                       Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>
+            <TextBox x:Name="SearchTextBox" Style="{StaticResource textboxSearch}" TextChanged="SearchTextBox_TextChanged" Panel.ZIndex="1"/>
+
+            <Button  Width="20" Height="20" VerticalAlignment="Center"
+                           Margin="0 0 15 0" HorizontalAlignment="Right" Background="White" BorderThickness="0" Click="Button_Calendar_Click"  Panel.ZIndex="1">
+                <Icon:PackIconMaterial Kind="Calendar" Foreground="Gray" />
+            </Button>
+            <DatePicker x:Name="DatePicker" Panel.ZIndex="0" Height="30" VerticalAlignment="Center" Background="WhiteSmoke" 
+                        BorderThickness="0" Margin="10 10 10 0"/>
         </Grid>
         <DataGrid Style="{DynamicResource DataGridStyle1}" 
                   CellStyle="{DynamicResource DataGridCellStyle1}" 

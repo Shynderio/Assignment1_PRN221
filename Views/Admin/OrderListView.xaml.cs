@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using static Estore.Repositories.OrderRepository;
 
 namespace Estore.Views.Admin
@@ -122,6 +123,11 @@ namespace Estore.Views.Admin
             // Reset current page to 1 after search
             CurrentPage = 1;
             UpdatePagedView();
+        }
+
+        private void Button_Calendar_Click(object sender, RoutedEventArgs e)
+        {
+            DatePicker.IsDropDownOpen = true;
         }
     }
 

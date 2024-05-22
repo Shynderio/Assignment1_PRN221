@@ -44,18 +44,18 @@
                         </Separator>
                         <StackPanel DockPanel.Dock="Top">
                             <!-- Button to Manage Products -->
-                            <Button Click="NavigateToProducts" Style="{StaticResource menuButton}">
+                            <!--<Button Click="NavigateToProducts" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Package" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Products"></TextBlock>
                                 </StackPanel>
-                            </Button>
-                            <Button Click="NavigateToStaffs" Style="{StaticResource menuButton}">
+                            </Button>-->
+                            <!--<Button Click="NavigateToStaffs" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Account" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Staffs"></TextBlock>
                                 </StackPanel>
-                            </Button>
+                            </Button>-->
                             <Button Click="NavigateToOrders" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Clipboard" Style="{StaticResource menuButtonIcon}"/>
