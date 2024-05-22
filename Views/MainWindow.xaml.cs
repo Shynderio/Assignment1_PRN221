@@ -4,6 +4,9 @@ using Estore.Session_Login;
 using Estore.Views;
 using Estore.Views.Admin;
 using Estore.Views.Staff;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,13 +28,21 @@ namespace Estore
         IProductRepository _productRepository;
         IOrderRepository _orderRepository;
         private readonly MyStoreContext _context;
-
+        private readonly string _defaultEmail;
+        private readonly string _defaultPassword;
         public MainWindow(IProductRepository productRepository, MyStoreContext context, IOrderRepository orderRepository)
         {
             InitializeComponent();
             _productRepository = productRepository;
             _orderRepository = orderRepository; 
             _context = context;
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            _defaultEmail = configuration["EmailSetting:email"];
+            _defaultPassword = configuration["EmailSetting:password"];
             //_context = new MyStoreContext();
         }
 
@@ -44,6 +55,18 @@ namespace Estore
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
                 MessageBox.Show("Username và Password không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (username == _defaultEmail && password == _defaultPassword)
+            {
+                // Login as default admin
+                sessionManage.SetSession("Username", "admin");
+                sessionManage.SetSession("Role", 1);
+
+                AdminView adminView = new AdminView(_productRepository, _orderRepository);
+                adminView.Show();
+                this.Close();
                 return;
             }
 
