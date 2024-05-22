@@ -43,6 +43,13 @@
                             </Separator.BorderBrush>
                         </Separator>
                         <StackPanel DockPanel.Dock="Top">
+                            <!--button profile view-->
+                            <Button Click="NavigateToProfile" Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="AccountBox" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Profile"></TextBlock>
+                                </StackPanel>
+                            </Button>
                             <!-- Button to Manage Products -->
                             <Button Click="NavigateToProducts" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
@@ -62,6 +69,7 @@
                                     <TextBlock Text="Orders"></TextBlock>
                                 </StackPanel>
                             </Button>
+                            
 
                             <!-- Button to Manage Staff -->
                             <!--<Button Content="Manage Staff" Click="NavigateToStaffs" Width="200" Height="40" FontSize="18" Margin="0 10"/>-->

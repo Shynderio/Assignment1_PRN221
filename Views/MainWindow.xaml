@@ -3,20 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:Estore"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="450" MaxHeight="450" MaxWidth="800" MinWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="350" />
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Height="30" VerticalAlignment="Top">
-            <Button Content="Admin" Click="NavigateToAdminView" Margin="5"/>
-            <Button Content="Staff" Click="NavigateToStaffView" Margin="5"/>
-        </StackPanel>
+        <!-- Left Side -->
+        <Border Background="#DA77F2" CornerRadius="10" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-        <ContentControl x:Name="ContentArea" Grid.Row="1"/>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20">
+                    <!-- Replace TextBlock with Image for Logo -->
+                    <!--<Image Source="pack://application:,,,/Estore;component/Assets/logo.png" Height="50" />-->
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" Margin="20">
+                    <TextBlock Text="Welcome Page" FontWeight="Bold" FontSize="36" Foreground="White" />
+                    <TextBlock Text="Sign in to continue access" FontSize="18" Foreground="White" />
+                </StackPanel>
+
+                <TextBlock Grid.Row="2" Text="www.mysite.com" Foreground="White" HorizontalAlignment="Right" Margin="20" />
+            </Grid>
+        </Border>
+
+        <!-- Right Side -->
+        <Border Grid.Column="1" Background="White" CornerRadius="10" Margin="10">
+            <StackPanel Margin="20">
+                <TextBlock Text="Sign In" FontWeight="Bold" FontSize="24" Margin="0,0,0,20" Foreground="green"/>
+
+                <!-- Username TextBox -->
+                <TextBlock Text="Username" FontSize="20" FontWeight="bold" />
+                <TextBox x:Name="tbUsername"  Margin="0,10,0,0" Padding="10" />
+
+                <!-- Password TextBox -->
+                <TextBlock Text="Password" FontSize="20" FontWeight="bold" />
+                <PasswordBox x:Name="pbPassword"  Margin="0,10,0,0" Padding="10" />
+
+                <!-- Login Button -->
+                <Border></Border>
+                <Button Style="{StaticResource addButton}" Content="Login" Margin="0,20,0,0" Padding="10" Background="#DA77F2" Foreground="White" Click="btnLogin_Click" Width="289" />
+            </StackPanel>
+        </Border>
+        
     </Grid>
 </Window>

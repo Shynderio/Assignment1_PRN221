@@ -7,7 +7,16 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="UserControls\Card.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserControls\MyTextBox.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Admin\AdminView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Staff\ProfileView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\OrderListView.xaml.cs">
@@ -27,6 +36,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="UserControls\Card.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UserControls\MyTextBox.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Admin\AdminView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -43,6 +58,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Staff\ProfileView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Staff\StaffView.xaml">

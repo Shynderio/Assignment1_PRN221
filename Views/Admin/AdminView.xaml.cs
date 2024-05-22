@@ -43,6 +43,12 @@ namespace Estore.Views.Admin
         {
             var staffManager = new StaffsManageView();
             ContentFrame.Navigate(staffManager);
+        } 
+        private void NavigateToProfile(object sender, RoutedEventArgs e)
+        {
+
+            var profileView = new ProfileView();
+            ContentFrame.Navigate(profileView);
         }
 
         private void NavigateToOrders(object sender, RoutedEventArgs e)
