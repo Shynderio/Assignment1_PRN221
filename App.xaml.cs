@@ -24,6 +24,7 @@ namespace Estore
         {
             services.AddDbContext<MyStoreContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddSingleton<MainWindow>();
 
         }
@@ -31,7 +32,7 @@ namespace Estore
         private void OnStartUp(object sender, StartupEventArgs e)
         {
             var newWindow = serviceProvider.GetService<MainWindow>();
-            newWindow.Show();
+            newWindow?.Show();
         }
     }
 
