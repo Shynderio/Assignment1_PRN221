@@ -78,7 +78,7 @@
                             <!--<Button Content="View Orders" Click="NavigateToOrders" Width="200" Height="40" FontSize="18" Margin="0 10"/>-->
 
                         </StackPanel>
-                        <Button Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
+                        <Button Click="Button_Click" Style="{StaticResource menuButton}" VerticalAlignment="Bottom" DockPanel.Dock="Bottom">
                             <StackPanel Orientation="Horizontal">
                                 <Icon:PackIconMaterial Kind="Logout" Style="{StaticResource menuButtonIcon}"/>
                                 <TextBlock Text="Log out"></TextBlock>

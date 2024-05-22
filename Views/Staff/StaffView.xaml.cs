@@ -1,5 +1,8 @@
-﻿using Estore.Repositories;
+﻿using Estore.Models;
+using Estore.Repositories;
+using Estore.Session_Login;
 using Estore.Views.Admin;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +24,7 @@ namespace Estore.Views.Staff
     /// </summary>
     public partial class StaffView : Window
     {
+        private MyStoreContext _context;
         IProductRepository _productRepository;
         IOrderRepository _orderRepository;
         public StaffView(IProductRepository productRepository, IOrderRepository orderRepository)
@@ -36,6 +40,12 @@ namespace Estore.Views.Staff
             var productManager = new ProductsManageView(_productRepository);
             ContentFrame.Navigate(productManager);
         }
+        private void NavigateToProfile(object sender, RoutedEventArgs e)
+        {
+
+            var profileView = new ProfileView();
+            ContentFrame.Navigate(profileView);
+        }
 
         private void NavigateToStaffs(object sender, RoutedEventArgs e)
         {
@@ -45,8 +55,8 @@ namespace Estore.Views.Staff
 
         private void NavigateToOrders(object sender, RoutedEventArgs e)
         {
-            var orderListView = new OrderListView(_orderRepository);
-            ContentFrame.Navigate(orderListView);
+            //var orderListView = new OrderListView(_orderRepository);
+            //ContentFrame.Navigate(orderListView);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -81,6 +91,19 @@ namespace Estore.Views.Staff
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow(_productRepository, _context, _orderRepository);
+
+            // Show the MainWindow
+            mainWindow.Show();
+
+            // Close the current AdminView
+            this.Close();
+            SessionManage sessionManage = SessionManage.Instance;
+            sessionManage.RemoveSession(Uid);
         }
     }
 }

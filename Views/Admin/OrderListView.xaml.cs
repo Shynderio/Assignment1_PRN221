@@ -29,6 +29,12 @@ namespace Estore.Views.Admin
             _isStaff = role.Equals("staff");
             InitializeOrdersAsync();
         }
+        public void FilterOrdersById(int orderId)
+        {
+            _filteredOrders = _allOrders.Where(o => o.OrderId == orderId).ToList();
+            CurrentPage = 1;
+            UpdatePagedView();
+        }
 
 
         private async Task InitializeOrdersAsync()
