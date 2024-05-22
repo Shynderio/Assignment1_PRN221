@@ -24,7 +24,7 @@ namespace Estore.Views.Admin
             {
                 var product = await _productRepository.GetProductByID(id);
                 productId.Text = product.ProductId.ToString();
-                listCategories.SelectedValue = product.Category.CategoryId;
+                listCategories.SelectedValue = product.CategoryId;
                 productName.Text = product.ProductName;
                 unitPrice.Text = product.UnitPrice.ToString();
             }

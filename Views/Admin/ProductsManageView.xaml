@@ -65,8 +65,7 @@
                     <TextBlock Text="Categoty" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
                            Panel.ZIndex="1"/>
                     <ComboBox x:Name="listCategories" Style="{StaticResource comboBox}" 
-                      DisplayMemberPath="CategoryName"
-                      SelectedValue="{Binding SelectedItem}" 
+                      DisplayMemberPath="CategoryName" 
                       SelectedValuePath="CategoryId"
                       SelectionChanged="listCategories_SelectionChanged"/>
                     <!--<TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>-->

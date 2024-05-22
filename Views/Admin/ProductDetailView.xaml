@@ -161,7 +161,6 @@
                        Panel.ZIndex="1" Text="Category"/>
             <ComboBox x:Name="listCategories" Style="{StaticResource comboBox}" 
                       DisplayMemberPath="CategoryName"
-                      SelectedValue="{Binding SelectedItem}" 
                       SelectedValuePath="CategoryId"/>
             <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Black" IsHitTestVisible="False"
                        Panel.ZIndex="1" Text="Product Name"/>
