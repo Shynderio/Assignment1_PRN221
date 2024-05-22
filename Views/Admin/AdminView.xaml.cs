@@ -1,4 +1,6 @@
-﻿using Estore.Repositories;
+﻿using Estore.Models;
+using Estore.Repositories;
+using Estore.Session_Login;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System;
 using System.Collections.Generic;
@@ -21,8 +23,11 @@ namespace Estore.Views.Admin
     /// <summary>
     /// Interaction logic for AdminView.xaml
     /// </summary>
+    /// 
+   
     public partial class AdminView : Window
     {
+        private MyStoreContext _context;
         IProductRepository _productRepository;
         IOrderRepository _orderRepository;
         public AdminView(IProductRepository productRepository, IOrderRepository orderRepository)
@@ -89,6 +94,19 @@ namespace Estore.Views.Admin
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow(_productRepository, _context, _orderRepository);
+
+            // Show the MainWindow
+            mainWindow.Show();
+
+            // Close the current AdminView
+            this.Close();
+            SessionManage sessionManage = SessionManage.Instance;
+            sessionManage.RemoveSession(Uid);
         }
     }
 }
