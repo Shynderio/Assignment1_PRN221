@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProductsManageView">
     <Page.Resources>
-        <Style TargetType="Button">
+        <!--<Style TargetType="Button">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="BorderBrush" Value="DimGray"/>
             <Setter Property="Margin" Value="10"/>
@@ -21,7 +21,7 @@
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="Margin" Value="10"/>
-        </Style>
+        </Style>-->
         <Style TargetType="DataGrid">
             <Setter Property="Margin" Value="10, 20"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
@@ -56,17 +56,48 @@
 
         <TextBlock Text="Products List" Grid.Row="4" FontSize="18" FontWeight="SemiBold"
                  Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Text="Search" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
-                 Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <!--<TextBlock Text="Search" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
+                 Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>-->
 
-        <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
-            <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
-                       Panel.ZIndex="1"
-                       Visibility="{Binding ElementName=SearchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-            <TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>
-            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
-                       Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>
-        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
+            <Grid Width="150">
+                <StackPanel>
+                    <TextBlock Text="Categoty" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <ComboBox x:Name="listCategories" Style="{StaticResource comboBox}" 
+                      DisplayMemberPath="CategoryName"
+                      SelectedValue="{Binding SelectedItem}" 
+                      SelectedValuePath="CategoryId"
+                      SelectionChanged="listCategories_SelectionChanged"/>
+                    <!--<TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>-->
+                    <!--<Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
+                           Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>-->
+                </StackPanel>
+            </Grid>
+            <Grid Width="150">
+                <StackPanel>
+                    <TextBlock Text="Search" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                <TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>
+                <!--<Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
+                           Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>-->
+                </StackPanel>
+            </Grid>
+            <Grid Width="100">
+                <StackPanel>
+                    <TextBlock Text="Min" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <TextBox x:Name="tbxMin" Style="{StaticResource textboxSearch}" TextChanged="tbxMin_TextChanged"/>
+                </StackPanel>
+            </Grid>
+            <Grid Width="100">
+                <StackPanel>
+                    <TextBlock Text="Max" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <TextBox x:Name="tbxMax" Style="{StaticResource textboxSearch}" TextChanged="tbxMax_TextChanged"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
         <DataGrid Style="{DynamicResource DataGridStyle1}" 
                   CellStyle="{DynamicResource DataGridCellStyle1}" 
                   ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
