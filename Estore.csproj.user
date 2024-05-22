@@ -7,10 +7,22 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="UserControls\Card.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="UserControls\MyTextBox.xaml.cs">
+    <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\AddStaffView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Admin\AdminView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Staff\ProfileView.xaml.cs">
+    <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\StaffInsert.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\OrderListView.xaml.cs">
@@ -25,12 +37,27 @@
     <Compile Update="Views\Admin\StaffsManageView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Admin\StaffUpdate.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Staff\StaffView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="UserControls\Card.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="UserControls\MyTextBox.xaml">
+    <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\AddStaffView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Views\Admin\AdminView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\StaffInsert.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\OrderListView.xaml">
@@ -43,6 +70,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\StaffsManageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\StaffUpdate.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">

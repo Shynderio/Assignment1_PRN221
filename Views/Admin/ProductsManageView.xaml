@@ -8,7 +8,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ProductsManageView">
     <Page.Resources>
-        <Style TargetType="Button">
+        <!--<Style TargetType="Button">
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="BorderBrush" Value="DimGray"/>
             <Setter Property="Margin" Value="10"/>
@@ -21,7 +21,7 @@
             <Setter Property="Width" Value="200"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="Margin" Value="10"/>
-        </Style>
+        </Style>-->
         <Style TargetType="DataGrid">
             <Setter Property="Margin" Value="10, 20"/>
             <Setter Property="AutoGenerateColumns" Value="False"/>
@@ -50,23 +50,53 @@
         </Button>
         <Separator Height="1" Grid.Row="3" Background="White" Margin="0 -1 0 10"/>
         
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 10 0 0 ">
-            <Button Content="" Style="{StaticResource tabButton}"/>
-        </StackPanel>
+        <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 10 0 0 ">
+            <Button Content="Hello" Style="{StaticResource tabButton}"/>
+        </StackPanel>-->
 
         <TextBlock Text="Products List" Grid.Row="4" FontSize="18" FontWeight="SemiBold"
                  Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Text="Search" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
-                 Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        <!--<TextBlock Text="Search" Grid.Row="4" FontSize="13" Margin="0 0 215 0"
+                 Foreground="Black" HorizontalAlignment="Right" VerticalAlignment="Center"/>-->
 
-        <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
-            <TextBlock Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
-                       Panel.ZIndex="1" Text="Product name"
-                       Visibility="{Binding ElementName=SearchTextBox, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-            <TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>
-            <Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
-                       Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>
-        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right">
+            <Grid Width="150">
+                <StackPanel>
+                    <TextBlock Text="Categoty" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <ComboBox x:Name="listCategories" Style="{StaticResource comboBox}" 
+                      DisplayMemberPath="CategoryName" 
+                      SelectedValuePath="CategoryId"
+                      SelectionChanged="listCategories_SelectionChanged"/>
+                    <!--<TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>-->
+                    <!--<Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
+                           Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>-->
+                </StackPanel>
+            </Grid>
+            <Grid Width="150">
+                <StackPanel>
+                    <TextBlock Text="Search" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                <TextBox x:Name="tbxSearch" Style="{StaticResource textboxSearch}" TextChanged="tbxSearch_TextChanged"/>
+                <!--<Icon:PackIconMaterial Kind="Magnify" Width="15" Height="15" VerticalAlignment="Center"
+                           Margin="0 0 15 0" Foreground="Gray" HorizontalAlignment="Right"/>-->
+                </StackPanel>
+            </Grid>
+            <Grid Width="100">
+                <StackPanel>
+                    <TextBlock Text="Min" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <TextBox x:Name="tbxMin" Style="{StaticResource textboxSearch}" TextChanged="tbxMin_TextChanged"/>
+                </StackPanel>
+            </Grid>
+            <Grid Width="100">
+                <StackPanel>
+                    <TextBlock Text="Max" Margin="20 0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                    <TextBox x:Name="tbxMax" Style="{StaticResource textboxSearch}" TextChanged="tbxMax_TextChanged"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
         <DataGrid Style="{DynamicResource DataGridStyle1}" 
                   CellStyle="{DynamicResource DataGridCellStyle1}" 
                   ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
@@ -76,17 +106,18 @@
                 <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="False" Width="Auto" Binding="{Binding ProductId}"/>
                 <DataGridTextColumn Header="Product Name" IsReadOnly="True" Width="*" Binding="{Binding ProductName}"/>
                 <DataGridTextColumn Header="Unit Price" IsReadOnly="True" Width="*" Binding="{Binding UnitPrice}"/>
+                <DataGridTextColumn Header="Category" IsReadOnly="True" Width="*" Binding="{Binding Category.CategoryName}"/>
                 <DataGridTemplateColumn Header="Actions" IsReadOnly="True" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource gridViewButton}" Visibility="{Binding Path = DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}">
+                                <!--<Button Style="{StaticResource gridViewButton}" Visibility="{Binding Path = DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}">
                                     <Icon:PackIconMaterial Kind="Pencil" Style="{StaticResource gridButtonIcon}"/>
-                                </Button>
-                                <Button Style="{StaticResource gridViewButton}">
+                                </Button>-->
+                                <Button x:Name="btnDetail" Style="{StaticResource gridViewButton}" Click="btnDetail_Click">
                                     <Icon:PackIconMaterial Kind="EyeOutline" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-                                <Button Style="{StaticResource gridDeleteButton}" Visibility="{Binding Path = DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}">
+                                <Button x:Name="btnDelete" Style="{StaticResource gridDeleteButton}" Click="btnDelete_Click">
                                     <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
                             </StackPanel>

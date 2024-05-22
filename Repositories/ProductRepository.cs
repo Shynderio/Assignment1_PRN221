@@ -13,130 +13,63 @@ namespace Estore.Repositories
         }
         public async Task<IEnumerable<Category>> GetCategories()
         {
-            try
-            {
-                return await _storeContext.Categories.ToArrayAsync();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e.Message}");
-                return Enumerable.Empty<Category>();
-            }
+            return await _storeContext.Categories.ToArrayAsync();
         }
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            try
-            {
-                return await _storeContext.Products.OrderBy(o => o.ProductId).ToArrayAsync();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e.Message}");
-                return Enumerable.Empty<Product>();
-            }
-        }
-        public async Task<int> GetTotalProducts()
-        {
-            return await _storeContext.Products.Select(o => o.ProductId).Distinct().CountAsync();
+            return await _storeContext.Products.Include(o => o.Category).OrderBy(o => o.ProductId).ToArrayAsync();
         }
 
         public async Task<Product> GetProductByID(int productId)
         {
-            try
-            {
-                var product = await _storeContext.Products.FirstOrDefaultAsync(o => o.ProductId == productId);
-                if (product == null)
-                    throw new Exception($"Product with id {productId} does not exist!");
-                return product;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e.Message}");
-                return new Product();
-            }
+            var product = await _storeContext.Products.Include(o => o.Category).FirstOrDefaultAsync(o => o.ProductId == productId);
+            if (product == null)
+                throw new Exception($"Product with id {productId} does not exist!");
+            return product;
         }
 
-        public async Task<Product> InsertProduct(Product product)
+        public async Task<Product> UpsertProduct(Product product)
         {
-            try
+            if (product == null)
+                throw new Exception("Invalid product");
+            if (ValidateProduct(product))
             {
-                if (product == null)
-                    throw new Exception("Invalid product");
-                if (ValidateProduct(product))
+                var isValidCategory = await _storeContext.Categories
+                        .AnyAsync(o => o.CategoryId == product.CategoryId);
+                if (!isValidCategory)
+                    throw new Exception($"Please re-check the product's category");
+                if (product.ProductId == 0)
                 {
                     var isDuplicateProduct = await _storeContext.Products
                         .AnyAsync(o => o.ProductName.ToLower().Equals(product.ProductName.Trim().ToLower()));
                     if (isDuplicateProduct)
-                        throw new Exception("Invalid product");
-                    var isValidCategory = await _storeContext.Categories
-                        .AnyAsync(o => o.CategoryId == product.CategoryId);
-                    if (!isValidCategory)
-                        throw new Exception($"Please re-check the product's category");
-                    var maxId = await _storeContext.Products.Select(o => o.ProductId).MaxAsync();
-                    product.ProductId = maxId + 1;
-                    await _storeContext.AddAsync(product);
+                        throw new Exception("Duplicate product");
+                    await _storeContext.AddAsync(new Product()
+                    {
+                        ProductName = product.ProductName,
+                        CategoryId = product.CategoryId,
+                        UnitPrice = product.UnitPrice,
+                    });
                     await _storeContext.SaveChangesAsync();
                     MessageBox.Show($"Add product [{product.ProductName}] successfully");
+                    product.ProductId = await _storeContext.Products.MaxAsync(o => o.ProductId);
                 }
-                return product;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e}");
-                return product;
-            }   
-        }
-
-        public async Task<IEnumerable<Product>> DeleteProduct(int productId)
-        {
-            try
-            {
-                var product = await _storeContext.Products.FirstOrDefaultAsync(o => o.ProductId == productId);
-                if (product == null)
-                    throw new Exception($"Product with id {productId} does not exist");
-                var isInOrder = await _storeContext.OrderDetails.AnyAsync(o => o.ProductId == productId);
-                if (isInOrder)
-                    throw new Exception($"Product with id [{productId}] already had order(s) so that it cannot be deleted");
-                _storeContext.Products.Remove(product);
-                await _storeContext.SaveChangesAsync();
-                return await GetProducts();
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e}");
-                return await GetProducts();
-            }
-        }
-
-        public async Task<Product> UpdateProduct(Product product)
-        {
-            try
-            {
-                if (product == null)
-                throw new Exception("Invalid product");
-                if (ValidateProduct(product))
+                else
                 {
                     var existingProduct = await _storeContext.Products
                         .FirstOrDefaultAsync(o => o.ProductId == product.ProductId);
                     if (existingProduct == null)
                         throw new Exception($"Product with id [{product.ProductId}] does not exist");
-                    var isValidCategory = await _storeContext.Categories
-                        .AnyAsync(o => o.CategoryId == product.CategoryId);
-                    if (!isValidCategory)
-                        throw new Exception($"Please re-check the product's category");
+                    existingProduct.CategoryId = product.CategoryId;
                     existingProduct.ProductName = product.ProductName;
                     existingProduct.UnitPrice = product.UnitPrice;
                     _storeContext.Products.Update(existingProduct);
                     await _storeContext.SaveChangesAsync();
+                    MessageBox.Show($"Update product [{product.ProductName}] successfully");
                 }
-                return product;
             }
-            catch (Exception e)
-            {
-                MessageBox.Show($"Error: {e}");
-                return product;
-            }
+            return await GetProductByID(product.ProductId);
         }
 
         static bool ValidateProduct(Product product)
@@ -145,11 +78,24 @@ namespace Estore.Repositories
                 throw new Exception("Product name is a required field");
             if (product.ProductName.Trim().Length < 6)
                 throw new Exception("Product name must be at least 6-character long");
-            if (!product.ProductName.All(o => char.IsLetter(o)))
-                throw new Exception("Product name must contain letters only");
+            //if (!product.ProductName.All(o => char.IsLetter(o)))
+            //    throw new Exception("Product name must contain letters only");
             if (product.UnitPrice <= 0)
                 throw new Exception("Unit price must be bigger than 0");
             return true;
+        }
+
+        public async Task<IEnumerable<Product>> DeleteProduct(int productId)
+        {
+            var product = await _storeContext.Products.FirstOrDefaultAsync(o => o.ProductId == productId);
+            if (product == null)
+                throw new Exception($"Product with id {productId} does not exist");
+            var isInOrder = await _storeContext.OrderDetails.AnyAsync(o => o.ProductId == productId);
+            if (isInOrder)
+                throw new Exception($"Product with id [{productId}] already had order(s) so that it cannot be deleted");
+            _storeContext.Products.Remove(product);
+            await _storeContext.SaveChangesAsync();
+            return await GetProducts();
         }
     }
 }

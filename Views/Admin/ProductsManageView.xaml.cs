@@ -2,6 +2,7 @@
 using Estore.Repositories;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Estore.Views.Admin
 {
@@ -11,13 +12,17 @@ namespace Estore.Views.Admin
     public partial class ProductsManageView : Page
     {
         private readonly IProductRepository _productRepository;
-        private int skip = 0;
-        private int take = 5;
-        private string keyword = string.Empty;
+        private int _skip = 0;
+        private int _take = 5;
         private int _totalProducts;
         private int _totalPages;
         private int _currentPage = 1;
+        private IEnumerable<Product> _allProducts;
         private IEnumerable<Product> _currentProducts;
+        private string _keyword = string.Empty;
+        private int _categoryId = 0;
+        private int _minPrice = int.MinValue;
+        private int _maxPrice = int.MaxValue;
         public ProductsManageView(IProductRepository productRepository)
         {
             InitializeComponent();
@@ -26,12 +31,21 @@ namespace Estore.Views.Admin
         }
         private async Task InitializeProductAsync()
         {
-            _currentProducts = await _productRepository.GetProducts();
+            _allProducts = await _productRepository.GetProducts();
+            _currentProducts = _allProducts;
             _totalProducts = _currentProducts.Count();
-            _totalPages = _totalProducts / take;
+            _totalPages = _totalProducts / _take;
             txtCurrent.Text = _currentPage.ToString();
-            txtTotal.Text = (_totalProducts % take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
-            listProducts.ItemsSource = _currentProducts.Skip(skip).Take(take);
+            txtTotal.Text = (_totalProducts % _take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
+            listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
+            var categories = (await _productRepository.GetCategories()).ToList();
+            categories.Add(new Category()
+            {
+                CategoryId = 0,
+                CategoryName = "All",
+            });
+            listCategories.ItemsSource = categories.OrderBy(o => o.CategoryId);
+            listCategories.SelectedValue = categories.FirstOrDefault(o => o.CategoryId == _categoryId)?.CategoryId;
         }
 
         private void btnAdd_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -42,37 +56,127 @@ namespace Estore.Views.Admin
 
         private void btnPrev_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (skip - take >= 0)
+            if (_skip - _take >= 0)
             {
                 txtCurrent.Text = (--_currentPage).ToString();
-                skip -= take;
-                listProducts.ItemsSource = _currentProducts.Skip(skip).Take(take);
+                _skip -= _take;
+                listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
             }
         }
 
         private void btnNext_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (skip + take <= _totalProducts)
+            if (_skip + _take < _totalProducts)
             {
                 txtCurrent.Text = (++_currentPage).ToString();
-                skip += take;
-                if (skip >= _totalPages * take)
+                _skip += _take;
+                if (_skip >= _totalPages * _take)
                 {
-                    listProducts.ItemsSource = _currentProducts.Skip(skip).Take(_totalProducts - skip);
+                    listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_totalProducts - _skip);
                 }
                 else
                 {
-                    listProducts.ItemsSource = _currentProducts.Skip(skip).Take(take);
+                    listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
                 }
             }
         }
 
         private void tbxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            keyword = tbxSearch.Text;
-            skip = 0;
-            _currentProducts = _currentProducts.Where(o => o.ProductName.Contains(keyword)).Skip(skip).Take(take);
-            listProducts.ItemsSource = _currentProducts;
+            _keyword = tbxSearch.Text;
+            FilterProducts();
+        }
+
+        private void btnDetail_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                // Find the DataGridRow that contains the button
+                DataGridRow row = FindParent<DataGridRow>(button);
+                if (row != null)
+                {
+                    // Get the item bound to the DataGridRow
+                    Product item = row.Item as Product;
+                    if (item != null)
+                    {
+                        var addProductView = new ProductDetailView(_productRepository, item.ProductId);
+                        this.NavigationService.Navigate(addProductView);
+                    }
+                }
+            }
+        }
+
+        private static T FindParent<T>(DependencyObject child) where T : DependencyObject
+        {
+            DependencyObject parentObject = VisualTreeHelper.GetParent(child);
+            if (parentObject == null) return null;
+            if (parentObject is T parent) return parent;
+            return FindParent<T>(parentObject);
+        }
+
+        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                // Find the DataGridRow that contains the button
+                DataGridRow row = FindParent<DataGridRow>(button);
+                if (row != null)
+                {
+                    // Get the item bound to the DataGridRow
+                    Product item = row.Item as Product;
+                    if (item != null)
+                    {
+                        // Show confirmation message box
+                        MessageBoxResult result = MessageBox.Show(
+                            $"Are you sure you want to delete {item.ProductName}?",
+                            "Confirmation",
+                            MessageBoxButton.YesNo,
+                            MessageBoxImage.Warning
+                        );
+
+                        if (result == MessageBoxResult.Yes)
+                        {
+                            _allProducts =  await _productRepository.DeleteProduct(item.ProductId);
+                            FilterProducts();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void listCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            _categoryId = Convert.ToInt32(listCategories.SelectedValue.ToString());
+            FilterProducts();
+        }
+
+        private void tbxMin_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var isInt = Int32.TryParse(string.IsNullOrEmpty(tbxMin.Text) ? int.MinValue.ToString() : tbxMin.Text, out _minPrice);
+            FilterProducts();
+        }
+
+        private void tbxMax_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var isInt = Int32.TryParse(string.IsNullOrEmpty(tbxMax.Text) ? int.MaxValue.ToString() : tbxMax.Text, out _maxPrice);
+            FilterProducts();
+        }
+
+        private void FilterProducts()
+        {
+            _skip = 0;
+            _currentProducts = _allProducts
+                .Where(o => o.ProductName.Contains(_keyword)
+                && o.UnitPrice >= _minPrice
+                && o.UnitPrice <= _maxPrice);
+            if (_categoryId != 0)
+                _currentProducts = _currentProducts.Where(o => o.CategoryId == _categoryId);
+            _totalProducts = _currentProducts.Count();
+            _currentPage = _totalProducts == 0 ? 0 : 1;
+            _totalPages = _totalProducts / _take;
+            txtCurrent.Text = _currentPage.ToString();
+            txtTotal.Text = (_totalProducts % _take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
+            listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
         }
     }
 }

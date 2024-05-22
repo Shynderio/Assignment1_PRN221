@@ -1,19 +1,7 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Estore.Views.Admin
 {
@@ -23,30 +11,48 @@ namespace Estore.Views.Admin
     public partial class ProductDetailView : Page
     {
         private readonly IProductRepository _productRepository;
-        public ProductDetailView(IProductRepository productRepository)
+        public ProductDetailView(IProductRepository productRepository, int productId = 0)
         {
             _productRepository = productRepository;
             InitializeComponent();
+            InitializeDetailAsync(productId);
+        }
+        private async Task InitializeDetailAsync(int id = 0)
+        {
+            listCategories.ItemsSource = await _productRepository.GetCategories();
+            if (id != 0)
+            {
+                var product = await _productRepository.GetProductByID(id);
+                productId.Text = product.ProductId.ToString();
+                listCategories.SelectedValue = product.CategoryId;
+                productName.Text = product.ProductName;
+                unitPrice.Text = product.UnitPrice.ToString();
+            }
         }
 
         private async void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                int id, price;
-                var isInt = Int32.TryParse(productId.Text, out id);
-                if (!isInt)
-                    throw new Exception("Product ID is invalid!");
-                isInt = Int32.TryParse(unitPrice.Text, out price);
+                int price;
+                var isInt = Int32.TryParse(unitPrice.Text, out price);
                 if (!isInt)
                     throw new Exception("Unit price must be a positive integer!");
                 Product product = new Product()
                 {
-                    CategoryId = id,
-                    ProductName = productName.Text,
+                    ProductId = string.IsNullOrEmpty(productId.Text) ? 0 : Convert.ToInt32(productId.Text),
+                    CategoryId = string.IsNullOrEmpty(listCategories.SelectedValue?.ToString()) ? 
+                        0 : Convert.ToInt32(listCategories.SelectedValue.ToString()),
+                    ProductName = productName.Text ?? string.Empty,
                     UnitPrice = price,
                 };
-                await _productRepository.InsertProduct(product);
+                var result = await _productRepository.UpsertProduct(product);
+                if (result == null)
+                    throw new Exception("Error while saving changes!");
+                productId.Text = result.ProductId.ToString();
+                listCategories.SelectedValue = product.CategoryId;
+                productName.Text = result.ProductName;
+                unitPrice.Text = result.UnitPrice.ToString();
             }
             catch (Exception ex)
             {
@@ -54,22 +60,10 @@ namespace Estore.Views.Admin
             }
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private void btnBack_Click(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        static bool ValidateProduct(Product product)
-        {
-            if (string.IsNullOrEmpty(product.ProductName))
-                throw new Exception("Product name is a required field");
-            if (product.ProductName.Trim().Length < 6)
-                throw new Exception("Product name must be at least 6-character long");
-            if (!product.ProductName.All(o => char.IsLetter(o)))
-                throw new Exception("Product name must contain letters only");
-            if (product.UnitPrice <= 0)
-                throw new Exception("Unit price must be bigger than 0");
-            return true;
+            var listProductView = new ProductsManageView(_productRepository);
+            this.NavigationService.Navigate(listProductView);
         }
     }
 }
