@@ -224,10 +224,11 @@ namespace Estore.Views.Admin
                     var existProduct = _allProducts
                         .Any(o => o.ProductName.ToLower() == product.ProductName.Trim().ToLower());
                     if (!existProduct)
-                        await _productRepository.UpsertProduct(product);
+                        //await _productRepository.UpsertProduct(product);
+                        continue;
                 }
                 MessageBox.Show("Import products successfully!");
-                _allProducts = await _productRepository.GetProducts();
+                _allProducts = productsInFile;
                 FilterProducts();
             }
             catch (Exception ex)
