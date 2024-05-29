@@ -13,7 +13,7 @@ using static Estore.Repositories.OrderRepository;
 
 namespace Estore.Views.Admin
 {
-    public partial class OrderListView : Page, INotifyPropertyChanged
+    public partial class ReportView : Page, INotifyPropertyChanged
     {
         private const int ItemsPerPage = 8;
         private int _currentPage = 1;
@@ -27,7 +27,7 @@ namespace Estore.Views.Admin
         string _staffName = string.Empty;
 
         private DateTime _endDate;
-        public OrderListView(IOrderRepository orderRepository)
+        public ReportView(IOrderRepository orderRepository)
         {
             InitializeComponent();
             DataContext = this;
@@ -135,7 +135,7 @@ namespace Estore.Views.Admin
         {
             if (dataGrid.SelectedItem is OrderDto selectedOrder)
             {
-                OrderDetailView orderDetailView = new OrderDetailView(selectedOrder.OrderId);
+                OrderDetailView orderDetailView = new OrderDetailView(selectedOrder.OrderId, _orderRepository);
                 orderDetailView.ShowDialog();
             }
         }

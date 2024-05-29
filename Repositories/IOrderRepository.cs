@@ -12,10 +12,14 @@ namespace Estore.Repositories
     {
         Task<List<OrderDto>> GetAllOrdersAsync();
         Task AddOrderAsync(Order order);
-        Task<IEnumerable<OrderDetail>> GetOrderDetailsByOrderId(int orderId);
+        Task<List<OrderDetailDto>> GetOrderDetailsByOrderId(int orderId);
         Task<Order> GetOrderByOrderId(int orderId);
         Task DeleteOrderAsync(int orderId);
         Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate);
         Task<List<OrderDto>> GetOrdersByPeriod(DateTime startDate, DateTime endDate, string staffName);
+
+        Task<List<OrderDto>> GetOrdersByOrderDate(DateTime orderDate, string staffName);
+        Task<List<Product>> GetAllProductsAsync();
+        Task<Product> GetProductByNameAsync(string productName);
     }
 }

@@ -1,7 +1,7 @@
-﻿<Window x:Class="Estore.Views.Admin.AddOrderView"
+﻿<Window x:Class="Estore.AddOrderView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="New Order" Height="324" Width="400" WindowStartupLocation="CenterScreen"
+        Title="Add Order" Height="231" Width="404" WindowStartupLocation="CenterScreen"
         Background="#f0f0f0">
     <Window.Resources>
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
@@ -11,38 +11,44 @@
             <Setter Property="BorderBrush" Value="#cccccc"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Background" Value="White"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style x:Key="LabelStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="0 0 0 5"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
         <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0 15 0 0"/>
             <Setter Property="Padding" Value="10 5"/>
-            <Setter Property="Margin" Value="0 10 0 0"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Background" Value="#007acc"/>
+            <Setter Property="Background" Value="#4CAF50"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#007acc"/>
+            <Setter Property="BorderBrush" Value="#388E3C"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
 
     <Grid Margin="20">
-        <StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Order Date" Style="{StaticResource LabelStyle}"/>
-            <TextBox x:Name="OderDateTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
+        <TextBlock Text="Order Date:" Grid.Row="0" Grid.Column="0" Style="{StaticResource LabelStyle}" VerticalAlignment="Center"/>
+        <TextBox x:Name="OrderDateTextBox" Grid.Row="0" Grid.Column="1" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
 
-            <TextBlock Text="Staff ID" Style="{StaticResource LabelStyle}"/>
-            <TextBox x:Name="StaffIdTextBox" Text="Enter staff ID" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Style="{StaticResource TextBoxStyle}"/>
+        <TextBlock Text="Staff Name:" Grid.Row="1" Grid.Column="0" Style="{StaticResource LabelStyle}" VerticalAlignment="Center"/>
+        <TextBox x:Name="StaffNameTextBox" Grid.Row="1" Grid.Column="1" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
 
-            <TextBlock Text="Total Price" Style="{StaticResource LabelStyle}"/>
-            <TextBox x:Name="TotalPriceTextBox" Text="Enter total price" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus" Style="{StaticResource TextBoxStyle}"/>
-
-            <Button Content="Save" Click="SaveButton_Click" Style="{StaticResource ButtonStyle}"/>
-        </StackPanel>
+        <Button x:Name="AddOrderButton" Content="Add Order" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource ButtonStyle}" Click="AddOrderButton_Click"/>
     </Grid>
 </Window>

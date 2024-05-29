@@ -55,8 +55,15 @@
                             
                             <Button Click="NavigateToOrders" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
-                                    <Icon:PackIconMaterial Kind="Clipboard" Style="{StaticResource menuButtonIcon}"/>
+                                    <Icon:PackIconMaterial Kind="ListStatus" Style="{StaticResource menuButtonIcon}"/>
                                     <TextBlock Text="Orders"></TextBlock>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Click="NavigateToReport" Style="{StaticResource menuButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Icon:PackIconMaterial Kind="Clipboard" Style="{StaticResource menuButtonIcon}"/>
+                                    <TextBlock Text="Report"></TextBlock>
                                 </StackPanel>
                             </Button>
 

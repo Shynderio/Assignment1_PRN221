@@ -55,8 +55,14 @@ namespace Estore.Views.Staff
 
         private void NavigateToOrders(object sender, RoutedEventArgs e)
         {
-            //var orderListView = new OrderListView(_orderRepository);
-            //ContentFrame.Navigate(orderListView);
+            var orderListView = new OrderListView(_orderRepository);
+            ContentFrame.Navigate(orderListView);
+        }
+
+        private void NavigateToReport(object sender, RoutedEventArgs e)
+        {
+            var reportsView = new ReportView(_orderRepository);
+            ContentFrame.Navigate(reportsView);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)

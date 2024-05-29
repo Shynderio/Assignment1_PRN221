@@ -1,9 +1,10 @@
 ﻿<Window x:Class="Estore.Views.Admin.OrderDetailView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Order Detail" Height="475" Width="600" WindowStartupLocation="CenterScreen"
+        Title="Order Detail" Height="543" Width="600" WindowStartupLocation="CenterScreen"
         Background="#f0f0f0">
     <Window.Resources>
+        <!-- Styles -->
         <Style x:Key="TextBoxStyle" TargetType="TextBox">
             <Setter Property="Margin" Value="0 5 0 15"/>
             <Setter Property="Padding" Value="5"/>
@@ -27,31 +28,51 @@
             <Setter Property="CanUserResizeRows" Value="False"/>
             <Setter Property="IsReadOnly" Value="True"/>
         </Style>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0 15 0 0"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#388E3C"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
     </Window.Resources>
 
     <Grid Margin="20">
         <StackPanel>
 
+            <!-- Order ID -->
             <TextBlock Text="Order ID" Style="{StaticResource LabelStyle}"/>
             <TextBox x:Name="OrderIdTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}" />
 
+            <!-- Order Date -->
             <TextBlock Text="Order Date" Style="{StaticResource LabelStyle}"/>
             <TextBox x:Name="OrderDateTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
 
+            <!-- Staff Name -->
             <TextBlock Text="Staff Name" Style="{StaticResource LabelStyle}"/>
             <TextBox x:Name="StaffNameTextBox" IsReadOnly="True" Style="{StaticResource TextBoxStyle}"/>
 
+            <!-- Products -->
             <TextBlock Text="Products" Style="{StaticResource LabelStyle}" Margin="0 15 0 0"/>
-            <DataGrid x:Name="ProductDataGrid" Style="{StaticResource DataGridStyle}" Height="122">
+            <DataGrid Style="{DynamicResource DataGridStyle1}" 
+                  CellStyle="{DynamicResource DataGridCellStyle1}" 
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
+                  RowStyle="{DynamicResource DataGridRowStyle1}" 
+                  Grid.Row="5" x:Name="ProductDataGrid" Height="148">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="Auto"/>
-                    <DataGridTextColumn Header="Product Name" Binding="{Binding Product.ProductName}" Width="*"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="Auto"/>
-                    <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice}" Width="Auto"/>
+                    <DataGridTextColumn Header="Product ID" IsReadOnly="True" Binding="{Binding ProductId}" Width="Auto"/>
+                    <DataGridTextColumn Header="Product Name" IsReadOnly="True" Width="*" Binding="{Binding ProductName}"/>
+                    <DataGridTextColumn Header="Quantity" IsReadOnly="True" Binding="{Binding Quantity}" Width="Auto"/>
+                    <DataGridTextColumn Header="Unit Price" IsReadOnly="True" Binding="{Binding UnitPrice}" Width="Auto"/>
+                    <DataGridTextColumn Header="Total Price" IsReadOnly="True" Binding="{Binding TotalPrice}" Width="Auto"/>
                     <!-- Add more columns as needed -->
                 </DataGrid.Columns>
             </DataGrid>
 
+            <!-- Add Product button -->
+            <Button Content="Add Product" Click="AddProductButton_Click" Style="{StaticResource ButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Window>

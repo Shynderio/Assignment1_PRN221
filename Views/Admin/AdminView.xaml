@@ -63,10 +63,10 @@
                                     <TextBlock Text="Staffs"></TextBlock>
                                 </StackPanel>
                             </Button>
-                            <Button Click="NavigateToOrders" Style="{StaticResource menuButton}">
+                            <Button Click="NavigateToReports" Style="{StaticResource menuButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <Icon:PackIconMaterial Kind="Clipboard" Style="{StaticResource menuButtonIcon}"/>
-                                    <TextBlock Text="Orders"></TextBlock>
+                                    <TextBlock Text="Reports"></TextBlock>
                                 </StackPanel>
                             </Button>
                             

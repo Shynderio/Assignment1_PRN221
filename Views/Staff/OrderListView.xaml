@@ -1,14 +1,16 @@
-﻿<Page x:Class="Estore.Views.Admin.OrderListView"
+﻿<Page x:Class="Estore.Views.Staff.OrderListView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:Icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Estore.Views.Admin"
+      xmlns:local="clr-namespace:Estore.Views.Staff"
       
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="OrderListView">
+
+
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
         <BooleanToVisibilityConverter x:Key="IsStaff"/>
@@ -28,7 +30,7 @@
 
         <TextBlock Text="Orders" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 20 0 0"
                    HorizontalAlignment="Left" Foreground="Black"/>
-        <Button Style="{StaticResource addButton}" Visibility="{Binding IsStaff, Converter={StaticResource IsStaff}}" Click="AddOrderButton_Click">
+        <Button Style="{StaticResource addButton}" Click="AddOrderButton_Click">
             <StackPanel Orientation="Horizontal">
                 <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
                 <TextBlock Text="Add New Order"/>
@@ -42,7 +44,7 @@
 
         <TextBlock Text="Orders List" Grid.Row="4" FontSize="18" FontWeight="SemiBold"
                  Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Text="Start date" Grid.Row="4" FontSize="13" Margin="150 0 0 0"
+        <TextBlock Text="Order date" Grid.Row="4" FontSize="13" Margin="150 0 0 0"
                  Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
         <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="220 0 0 0">
@@ -58,22 +60,7 @@
             <DatePicker x:Name="DatePicker1" Panel.ZIndex="0" Height="30" VerticalAlignment="Center" Background="WhiteSmoke" 
                         BorderThickness="0" Margin="10 10 10 0" SelectedDateChanged="Selected_StartDate"/>
         </Grid>
-        <TextBlock Text="End date" Grid.Row="4" FontSize="13" Margin="450 0 0 0"
-                 Foreground="Black" HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-        <Grid Width="200" HorizontalAlignment="Left" Grid.Row="4" Margin="520 0 0 0">
-            <TextBlock Margin="20,0,35,0" VerticalAlignment="Center" Foreground="Gray" IsHitTestVisible="False"
-                       Panel.ZIndex="2" Text="Insert date"
-                       Visibility="{Binding ElementName=EndDate, Converter={StaticResource BoolToVis}}"/>
-            <TextBox x:Name="EndDate" Style="{StaticResource textboxSearch}"  IsEnabled="False" Panel.ZIndex="1"/>
-
-            <Button  Width="20" Height="20" VerticalAlignment="Center"
-                           Margin="0 0 15 0" HorizontalAlignment="Right" Background="White" BorderThickness="0" Click="EndDatePicker_Click"  Panel.ZIndex="1">
-                <Icon:PackIconMaterial Kind="Calendar" Foreground="Gray" />
-            </Button>
-            <DatePicker x:Name="DatePicker2" Panel.ZIndex="0" Height="30" VerticalAlignment="Center" Background="WhiteSmoke" 
-                        BorderThickness="0" Margin="10 10 10 0" SelectedDateChanged="Selected_EndDate"/>
-        </Grid>
         <DataGrid Style="{DynamicResource DataGridStyle1}" 
                   CellStyle="{DynamicResource DataGridCellStyle1}" 
                   ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
@@ -91,16 +78,10 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Style="{StaticResource gridViewButton}"
                               
-                                Click="EditButton_Click">
+                                Click="ViewButton_Click">
                                     <Icon:PackIconMaterial Kind="Eye" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
-                                <Button Style="{StaticResource gridViewButton}"
-                              Visibility="{Binding Path=DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}"    
-                                    Click="EditButton_Click">
-                                    <Icon:PackIconMaterial Kind="Pencil" Style="{StaticResource gridButtonIcon}"/>
-                                </Button>
                                 <Button Style="{StaticResource gridDeleteButton}" 
-                                Visibility="{Binding Path=DataContext.IsStaff, RelativeSource={RelativeSource AncestorType=Page}, Converter={StaticResource IsStaff}}"
                                 Click="DeleteButton_Click">
                                     <Icon:PackIconMaterial Kind="Delete" Style="{StaticResource gridButtonIcon}"/>
                                 </Button>
@@ -126,4 +107,5 @@
             </StackPanel>
         </Border>
     </Grid>
+
 </Page>

@@ -11,7 +11,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="UserControls\MyTextBox.xaml.cs">
-    <SubType>Code</SubType>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\Admin\AddProductToOrderView.xaml.cs">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\AddStaffView.xaml.cs">
       <SubType>Code</SubType>
@@ -19,13 +22,16 @@
     <Compile Update="Views\Admin\AdminView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\Staff\OrderListView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\Staff\ProfileView.xaml.cs">
-    <SubType>Code</SubType>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\StaffInsert.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\Admin\OrderListView.xaml.cs">
+    <Compile Update="Views\Admin\ReportView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\Admin\ProductDetailView.xaml.cs">
@@ -49,7 +55,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="UserControls\MyTextBox.xaml">
-    <SubType>Designer</SubType>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Admin\AddProductToOrderView.xaml">
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\AddStaffView.xaml">
       <SubType>Designer</SubType>
@@ -60,7 +69,7 @@
     <Page Update="Views\Admin\StaffInsert.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Views\Admin\OrderListView.xaml">
+    <Page Update="Views\Admin\ReportView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Admin\ProductDetailView.xaml">
@@ -76,6 +85,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\Staff\OrderListView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\Staff\ProfileView.xaml">

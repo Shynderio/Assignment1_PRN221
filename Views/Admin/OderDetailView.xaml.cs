@@ -1,40 +1,59 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using System;
 using System.Windows;
 
 namespace Estore.Views.Admin
 {
     public partial class OrderDetailView : Window
     {
+        private readonly IOrderRepository _orderRepository;
         private readonly int _orderId;
-        private readonly OrderRepository _orderRepository;
 
-        public OrderDetailView(int orderId)
+        public OrderDetailView(int orderId, IOrderRepository orderRepository)
         {
             InitializeComponent();
             _orderId = orderId;
-            _orderRepository = new OrderRepository(new MyStoreContext()); 
-
-            LoadOrderDetails();
+            _orderRepository = orderRepository;
+            LoadData();
         }
 
-        private async void LoadOrderDetails()
+        private async void LoadData()
         {
             try
             {
-                var orderDetails = await _orderRepository.GetOrderDetailsByOrderId(_orderId);
                 var order = await _orderRepository.GetOrderByOrderId(_orderId);
+                if (order != null)
+                {
+                    OrderIdTextBox.Text = order.OrderId.ToString();
+                    OrderDateTextBox.Text = order.OrderDate.ToString("yyyy-MM-dd HH:mm:ss");
+                    StaffNameTextBox.Text = order.Staff.Name;
 
-                ProductDataGrid.ItemsSource = orderDetails;
-
-                OrderIdTextBox.Text = order.OrderId.ToString();
-                OrderDateTextBox.Text = order.OrderDate.ToString();
-                StaffNameTextBox.Text   = order.Staff.Name.ToString();
+                    var orderDetails = await _orderRepository.GetOrderDetailsByOrderId(_orderId);
+                    ProductDataGrid.ItemsSource = orderDetails;
+                }
+                else
+                {
+                    MessageBox.Show("Order not found.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error: {e.Message}");
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private async void AddProductButton_Click(object sender, RoutedEventArgs e)
+        {
+            var addProductWindow = new AddProductToOrderView(_orderId, _orderRepository);
+            addProductWindow.ProductAdded += AddProductWindow_ProductAdded;
+            addProductWindow.Show();
+            this.Close();
+        }
+
+        private async void AddProductWindow_ProductAdded(object sender, EventArgs e)
+        {
+            LoadData();
         }
     }
 }

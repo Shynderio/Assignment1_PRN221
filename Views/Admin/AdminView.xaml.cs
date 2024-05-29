@@ -56,10 +56,10 @@ namespace Estore.Views.Admin
             ContentFrame.Navigate(profileView);
         }
 
-        private void NavigateToOrders(object sender, RoutedEventArgs e)
+        private void NavigateToReports(object sender, RoutedEventArgs e)
         {
-            var orderListView = new OrderListView(_orderRepository);
-            ContentFrame.Navigate(orderListView);
+            var reportView = new ReportView(_orderRepository);
+            ContentFrame.Navigate(reportView);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)

@@ -1,10 +1,12 @@
-﻿using Estore.Models;
-using Estore.Repositories;
-using System;
+﻿using System;
+using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using Estore.Session_Login;
+using Estore.Models;
+using Estore.Repositories;
+using Estore.Views.Staff;
 
-namespace Estore.Views.Admin
+namespace Estore
 {
     public partial class AddOrderView : Window
     {
@@ -14,61 +16,51 @@ namespace Estore.Views.Admin
         {
             InitializeComponent();
             _orderRepository = orderRepository;
-
-            OderDateTextBox.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            LoadData();
         }
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+        private void LoadData()
         {
-            try
+            // Set the current date
+            OrderDateTextBox.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            // Get the staff name from session
+            string staffName = SessionManage.Instance.GetSession("Username") as string;
+            StaffNameTextBox.Text = staffName ?? "Unknown"; // Set to "Unknown" if staffName is null
+        }
+
+        private void AddOrderButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var context = new MyStoreContext())
             {
-                if (!int.TryParse(StaffIdTextBox.Text, out int staffId) || StaffIdTextBox.Text == "Enter staff ID")
+                // Get staff name from TextBox
+                string staffName = StaffNameTextBox.Text;
+
+                // Get the StaffId from StaffName
+                var staff = context.Staffs.SingleOrDefault(s => s.Name == staffName);
+                if (staff == null)
                 {
-                    MessageBox.Show("Please enter a valid staff ID.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("Staff not found.");
                     return;
                 }
 
-                if (!decimal.TryParse(TotalPriceTextBox.Text, out decimal totalPrice) || TotalPriceTextBox.Text == "Enter total price")
+                // Create a new Order
+                var order = new Order
                 {
-                    MessageBox.Show("Please enter a valid total price.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                Order newOrder = new Order
-                {
-                    OrderDate = DateTime.Parse(OderDateTextBox.Text),
-                    StaffId = staffId,
+                    OrderDate = DateTime.Now,
+                    StaffId = staff.StaffId
                 };
 
-                await _orderRepository.AddOrderAsync(newOrder);
+                // Add order to the context
+                context.Orders.Add(order);
+                context.SaveChanges();
 
-                MessageBox.Show("Order added successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                DialogResult = true;
-                Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+                MessageBox.Show("Order added successfully!");
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            textBox.Text = string.Empty;
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            if (string.IsNullOrWhiteSpace(textBox.Text))
-            {
-                textBox.Text = textBox.Name switch
-                {
-                    "StaffIdTextBox" => "Enter staff ID",
-                    "TotalPriceTextBox" => "Enter total price",
-                    _ => string.Empty,
-                };
+                // Navigate to OrderDetailView
+                var orderDetailView = new Estore.Views.Admin.OrderDetailView(order.OrderId, _orderRepository);
+                orderDetailView.Show();
+                this.Close();
             }
         }
     }
