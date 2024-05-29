@@ -42,12 +42,26 @@
 
         <TextBlock Text="Products" Grid.Row="1" FontSize="32" FontWeight="SemiBold" Margin="0 20 0 0"
                    HorizontalAlignment="Left" Foreground="Black"/>
-        <Button Style="{StaticResource addButton}"  Visibility="{Binding IsStaff, Converter={StaticResource IsStaff}}" Click="btnAdd_Click">
-            <StackPanel Orientation="Horizontal">
-                <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
-                <TextBlock Text="Add New Product"/>
-            </StackPanel>
-        </Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+            <Button Style="{StaticResource addButton}" Click="btnExport_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Export" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                    <TextBlock Text="Export"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource addButton}" Click="btnImport_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Import" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                    <TextBlock Text="Import"/>
+                </StackPanel>
+            </Button>
+            <Button Style="{StaticResource addButton}"  Visibility="{Binding IsStaff, Converter={StaticResource IsStaff}}" Click="btnAdd_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Icon:PackIconMaterial Kind="Plus" VerticalAlignment="Center" Width="11" Height="11" Margin="0 1 8 0"/>
+                    <TextBlock Text="Add New Product"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
         <Separator Height="1" Grid.Row="3" Background="White" Margin="0 -1 0 10"/>
         
         <!--<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0 10 0 0 ">

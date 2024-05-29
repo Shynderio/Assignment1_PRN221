@@ -1,5 +1,7 @@
 ﻿using Estore.Models;
 using Estore.Repositories;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -19,6 +21,7 @@ namespace Estore.Views.Admin
         private int _currentPage = 1;
         private IEnumerable<Product> _allProducts;
         private IEnumerable<Product> _currentProducts;
+        private IEnumerable<Category> _allCategories;
         private string _keyword = string.Empty;
         private int _categoryId = 0;
         private int _minPrice = int.MinValue;
@@ -39,6 +42,7 @@ namespace Estore.Views.Admin
             txtTotal.Text = (_totalProducts % _take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
             listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
             var categories = (await _productRepository.GetCategories()).ToList();
+            _allCategories = categories;
             categories.Add(new Category()
             {
                 CategoryId = 0,
@@ -177,6 +181,80 @@ namespace Estore.Views.Admin
             txtCurrent.Text = _currentPage.ToString();
             txtTotal.Text = (_totalProducts % _take != 0) ? (++_totalPages).ToString() : _totalPages.ToString();
             listProducts.ItemsSource = _currentProducts.Skip(_skip).Take(_take);
+        }
+
+        private void btnExport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ExportToJson(_allProducts.ToArray(), @"D:\products.json");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private async void btnImport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string filePath = @"D:\products.json";
+                IEnumerable<Product> productsInFile = ReadFromJson<Product>(filePath);
+                foreach (Product product in productsInFile)
+                {
+                    //int currentId;
+                    //var isDigit = Int32.TryParse(product.UnitPrice.ToString(), out currentId);
+                    //if (!isDigit)
+                    //    continue;
+                    //if (currentId > 0)
+                    //    continue;
+                    if (string.IsNullOrEmpty(product.CategoryId.ToString()))
+                        continue;
+                    int currentCategoryId;
+                    var isDigit = Int32.TryParse(product.CategoryId.ToString(), out currentCategoryId);
+                    if (!isDigit)
+                        continue;
+                    if (!_allCategories.Select(o => o.CategoryId).ToList().Contains(currentCategoryId))
+                        continue;
+                    int currentPrice;
+                    isDigit = Int32.TryParse(product.UnitPrice.ToString(), out currentPrice);
+                    if (!isDigit)
+                        continue;
+                    var existProduct = _allProducts
+                        .Any(o => o.ProductName.ToLower() == product.ProductName.Trim().ToLower());
+                    if (!existProduct)
+                        await _productRepository.UpsertProduct(product);
+                }
+                MessageBox.Show("Import products successfully!");
+                _allProducts = await _productRepository.GetProducts();
+                FilterProducts();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public static void ExportToJson<T>(T[] array, string filePath)
+        {
+            // Serialize the array to JSON format
+            string jsonString = JsonSerializer.Serialize(array, new JsonSerializerOptions { WriteIndented = true });
+
+            // Write the JSON string to a file
+            File.WriteAllText(filePath, jsonString);
+            MessageBox.Show("Export products successfully!");
+        }
+
+        public static T[] ReadFromJson<T>(string filePath)
+        {
+            // Read the JSON string from the file
+            string jsonString = File.ReadAllText(filePath);
+
+            // Deserialize the JSON string into an array of objects
+            T[] array = JsonSerializer.Deserialize<T[]>(jsonString);
+
+            return array;
         }
     }
 }
